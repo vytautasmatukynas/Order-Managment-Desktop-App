@@ -15,11 +15,13 @@ New order window:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224933893-e1467319-8e04-4687-b93b-05e38662e584.png)
 
-Double click on row and update window pop-ups:
+Double click on row and update window pop-up:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224934565-75110bb4-4d38-479b-874e-8340254157d0.png)
 
-There is table i menubar settings to add new combo-box items, ofc you can write in com-box update/new widnows your own text:
+There pop-up window in menu-bar settings section - add new combo-box items:
+
+![paveikslas](https://user-images.githubusercontent.com/51360361/224937444-2698bde3-70b4-4ff5-8610-22b7b9fd3528.png)
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224935028-eb23862e-3696-48c1-b8a6-660cc9c0dd14.png)
 
