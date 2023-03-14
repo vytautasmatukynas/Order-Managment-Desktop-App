@@ -3,7 +3,7 @@ python, pyqt5, postgresql
 
 
 Simple order managment dekstop app, where you can store your orders.
-App shows when orders are late, you can attach order files .xlm .pdf and etc, add link to order docs folder, new/update/delete/open functions, print table, search table, check for updates and info.
+App shows when orders are late, you can attach order files .xlm .pdf .jpg .png, add link to order docs folder, new/update/delete/open functions, print table, search table, check for updates and info.
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224933673-f9a844f1-46c2-4bac-b948-79dd18b7860c.png)
 
