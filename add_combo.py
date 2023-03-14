@@ -26,7 +26,7 @@ class AddCombo(QDialog):
         super().__init__()
         self.setWindowTitle('ADD ComboBox ITEMS')
         self.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        self.setGeometry(400, 300, 400, 250)
+        self.setGeometry(400, 300, 400, 280)
         self.setFixedSize(self.size())
 
         # self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -67,7 +67,7 @@ class AddCombo(QDialog):
         self.pavadinimasE = QLineEdit()
         self.pavadinimasE.setFont(QFont("Times", 12))
 
-        self.okBtn = QPushButton("")
+        self.okBtn = QPushButton("UPDATE")
         self.okBtn.clicked.connect(self.addCombo)
         self.okBtn.setFont(QFont("Times", 10))
         self.okBtn.setFixedHeight(25)

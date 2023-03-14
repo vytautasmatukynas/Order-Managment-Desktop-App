@@ -79,7 +79,7 @@ class MainMenu(QMainWindow):
         self.tableWidgets()
         self.timeWidget()
         self.layouts()
-        self.updateInfoOnStart()
+        # self.updateInfoOnStart()
 
     def menubar(self):
         """Menu bar"""
@@ -160,7 +160,7 @@ class MainMenu(QMainWindow):
         # Submenu bar
         UpdateApp = QAction("Check for Updates", self)
         UpdateApp.setIcon(QIcon("icons/update.png"))
-        UpdateApp.triggered.connect(self.updateInfo)
+        # UpdateApp.triggered.connect(self.updateInfo)
         help.addAction(UpdateApp)
         help.addSeparator()
         Info = QAction("About", self)
@@ -168,100 +168,100 @@ class MainMenu(QMainWindow):
         Info.triggered.connect(self.helpinfo)
         help.addAction(Info)
 
-    def updateInfoOnStart(self):
-        """version check"""
-        try:
-            # Version file link
-            response = requests.get(
-                'https://gist.githubusercontent.com/xxxxxx')
-            data = response.text
-
-            if float(data) > float(__version__):
-                msg = QMessageBox()
-                msg.setWindowTitle("UPDATE MANAGER")
-                msg.setText('Update! Version {} to {}.'.format(__version__, data))
-                msg.setIcon(QMessageBox.Information)
-                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-
-                style_gray.msgsheetstyle(msg)
-
-                x = msg.exec_()
-
-                if (x == QMessageBox.Yes):
-                    # Donwload file link
-                    webbrowser.open_new_tab(
-                        'https://drive.google.com/file/xxxxxxx')
-
-                    self.MainClose()
-
-                else:
-                    pass
-
-            else:
-                pass
-
-        except:
-            msg = QMessageBox()
-            msg.setWindowTitle("ERROR...")
-            msg.setText("Error, check your internet connection or\n"
-                        "contact system administrator.")
-            msg.setIcon(QMessageBox.Warning)
-            msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-
-            style_gray.msgsheetstyle(msg)
-
-            x = msg.exec_()
-
-    def updateInfo(self):
-        try:
-            response = requests.get(
-                'https://gist.githubusercontent.com/xxxxxxx')
-            data = response.text
-
-            if float(data) > float(__version__):
-                msg = QMessageBox()
-                msg.setWindowTitle("UPDATE MANAGER")
-                msg.setText('Update! Version {} to {}.'.format(__version__, data))
-                msg.setIcon(QMessageBox.Information)
-                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-
-                style_gray.msgsheetstyle(msg)
-
-                x = msg.exec_()
-
-                if (x == QMessageBox.Yes):
-                    webbrowser.open_new_tab(
-                        'https://drive.google.com/file/xxxxxxxx')
-
-                    self.MainClose()
-
-                else:
-                    pass
-
-            else:
-                msg = QMessageBox()
-                msg.setWindowTitle("UPDATE MANAGER")
-                msg.setText('No updates, version {}.'.format(__version__))
-                msg.setIcon(QMessageBox.Information)
-                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-
-                style_gray.msgsheetstyle(msg)
-
-                x = msg.exec_()
-
-        except:
-            msg = QMessageBox()
-            msg.setWindowTitle("ERROR...")
-            msg.setText("Error, check your internet connection or\n"
-                        "contact system administrator.")
-            msg.setIcon(QMessageBox.Warning)
-            msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-
-            style_gray.msgsheetstyle(msg)
-
-            x = msg.exec_()
+    # def updateInfoOnStart(self):
+    #     """version check"""
+    #     try:
+    #         # Version file link
+    #         response = requests.get(
+    #             'https://gist.githubusercontent.com/xxxxxx')
+    #         data = response.text
+    #
+    #         if float(data) > float(__version__):
+    #             msg = QMessageBox()
+    #             msg.setWindowTitle("UPDATE MANAGER")
+    #             msg.setText('Update! Version {} to {}.'.format(__version__, data))
+    #             msg.setIcon(QMessageBox.Information)
+    #             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+    #             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    #
+    #             style_gray.msgsheetstyle(msg)
+    #
+    #             x = msg.exec_()
+    #
+    #             if (x == QMessageBox.Yes):
+    #                 # Donwload file link
+    #                 webbrowser.open_new_tab(
+    #                     'https://drive.google.com/file/xxxxxxx')
+    #
+    #                 self.MainClose()
+    #
+    #             else:
+    #                 pass
+    #
+    #         else:
+    #             pass
+    #
+    #     except:
+    #         msg = QMessageBox()
+    #         msg.setWindowTitle("ERROR...")
+    #         msg.setText("Error, check your internet connection or\n"
+    #                     "contact system administrator.")
+    #         msg.setIcon(QMessageBox.Warning)
+    #         msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+    #
+    #         style_gray.msgsheetstyle(msg)
+    #
+    #         x = msg.exec_()
+    #
+    # def updateInfo(self):
+    #     try:
+    #         response = requests.get(
+    #             'https://gist.githubusercontent.com/xxxxxxx')
+    #         data = response.text
+    #
+    #         if float(data) > float(__version__):
+    #             msg = QMessageBox()
+    #             msg.setWindowTitle("UPDATE MANAGER")
+    #             msg.setText('Update! Version {} to {}.'.format(__version__, data))
+    #             msg.setIcon(QMessageBox.Information)
+    #             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+    #             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    #
+    #             style_gray.msgsheetstyle(msg)
+    #
+    #             x = msg.exec_()
+    #
+    #             if (x == QMessageBox.Yes):
+    #                 webbrowser.open_new_tab(
+    #                     'https://drive.google.com/file/xxxxxxxx')
+    #
+    #                 self.MainClose()
+    #
+    #             else:
+    #                 pass
+    #
+    #         else:
+    #             msg = QMessageBox()
+    #             msg.setWindowTitle("UPDATE MANAGER")
+    #             msg.setText('No updates, version {}.'.format(__version__))
+    #             msg.setIcon(QMessageBox.Information)
+    #             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+    #
+    #             style_gray.msgsheetstyle(msg)
+    #
+    #             x = msg.exec_()
+    #
+    #     except:
+    #         msg = QMessageBox()
+    #         msg.setWindowTitle("ERROR...")
+    #         msg.setText("Error, check your internet connection or\n"
+    #                     "contact system administrator.")
+    #         msg.setIcon(QMessageBox.Warning)
+    #         msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+    #
+    #         style_gray.msgsheetstyle(msg)
+    #
+    #         x = msg.exec_()
 
     def helpinfo(self):
         # QMessageBox.information(self, "ABOUT", "If you want to find a needle in a haystack,\n"
@@ -556,7 +556,7 @@ class MainMenu(QMainWindow):
                     """SELECT id, company, client, phone_number, order_name,
                     order_term, status, comments, order_folder, order_file, update_date,
                     filename, filetype, filedir FROM orders 
-                    ORDER BY status ASC, order_term ASC order_name ASC, client ASC""")
+                    ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
                 query = cur.fetchall()
 
                 # Sort table values and adds to table, change color of some values
@@ -584,7 +584,7 @@ class MainMenu(QMainWindow):
 
                         # list of names and list of colours to name
                         list_names = ['FINISHED', 'IN PROCESS']
-                        list_colors = [(0, 204, 0, 110), (255, 255, 255)]
+                        list_colors = [(0, 204, 0, 110), (240, 248, 255)]
                         for count_num in range(0, len(list_names)):
                             while count_num < len(list_names):
                                 if data == list_names[count_num]:
@@ -615,7 +615,7 @@ class MainMenu(QMainWindow):
                     order_term, status, comments, order_folder, order_file, update_date,
                     filename, filetype, filedir FROM orders
                     WHERE statusas = 'FINISHED' 
-                    ORDER BY status ASC, order_term ASC order_name ASC, client ASC""")
+                    ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
                 query = cur.fetchall()
 
                 for row_date in query:
@@ -639,7 +639,7 @@ class MainMenu(QMainWindow):
 
                         # list of names and list of colours to name
                         list_names = ['FINISHED', 'IN PROCESS']
-                        list_colors = [(0, 204, 0, 110), (255, 255, 255)]
+                        list_colors = [(0, 204, 0, 110), (240, 248, 255)]
                         for count_num in range(0, len(list_names)):
                             while count_num < len(list_names):
                                 if data == list_names[count_num]:
@@ -669,7 +669,7 @@ class MainMenu(QMainWindow):
                     order_term, status, comments, order_folder, order_file, update_date,
                     filename, filetype, filedir FROM orders 
                     WHERE statusas = 'IN PROCESS' 
-                    ORDER BY status ASC, order_term ASC order_name ASC, client ASC""")
+                    ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
                 query = cur.fetchall()
 
                 for row_date in query:
@@ -693,7 +693,7 @@ class MainMenu(QMainWindow):
 
                         # list of names and list of colours to name
                         list_names = ['FINISHED', 'IN PROCESS']
-                        list_colors = [(0, 204, 0, 110), (255, 255, 255)]
+                        list_colors = [(0, 204, 0, 110), (240, 248, 255)]
                         for count_num in range(0, len(list_names)):
                             while count_num < len(list_names):
                                 if data == list_names[count_num]:
@@ -1152,61 +1152,61 @@ class MainMenu(QMainWindow):
     def openFile(self):
         """open selected file"""
         global ordersId
-        try:
-            con = psycopg2.connect(
-                **params
-            )
+        # try:
+        con = psycopg2.connect(
+            **params
+        )
 
-            c = con.cursor()
+        c = con.cursor()
 
-            c.execute("""SELECT * FROM orders WHERE ID = %s""", (ordersId,))
-            uzsakymai = c.fetchone()
+        c.execute("""SELECT * FROM orders WHERE ID = %s""", (ordersId,))
+        uzsakymai = c.fetchone()
 
-            self.filename = uzsakymai[12]
-            self.photo = uzsakymai[13]
-            self.filetype = uzsakymai[14]
+        self.filename = uzsakymai[11]
+        self.photo = uzsakymai[12]
+        self.filetype = uzsakymai[13]
 
-            str_none = ""
+        str_none = ""
 
-            if self.filetype == None or self.filetype == str_none \
-                    or self.photo == None or self.photo == str_none \
-                    or self.filename == None or self.filename == str_none:
-                msg = QMessageBox()
-                msg.setWindowTitle("ERROR...")
-                msg.setText("NO FILE...")
-                msg.setIcon(QMessageBox.Information)
-                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-
-                style_gray.msgsheetstyle(msg)
-
-                x = msg.exec_()
-
-            else:
-                path = "OrderApp/uzsakymai_list"
-                # Check whether the specified path exists or not
-                if not os.path.isdir(path):
-                    os.makedirs(path)
-
-                photoPath = "OrderApp/uzsakymai_list/" + self.filename + self.filetype
-
-                if not os.path.isfile(photoPath):
-                    self.ordersWriteToFile(self.photo, photoPath)
-
-                os.startfile(os.path.abspath(os.getcwd()) + "/" + photoPath, 'open')
-
-                con.close()
-
-        except (Exception, psycopg2.Error) as error:
-            print("Error while fetching data from PostgreSQL", error)
+        if self.filetype == None or self.filetype == str_none \
+                or self.photo == None or self.photo == str_none \
+                or self.filename == None or self.filename == str_none:
             msg = QMessageBox()
             msg.setWindowTitle("ERROR...")
-            msg.setText(f"Please first select ROW you want to open.")
-            msg.setIcon(QMessageBox.Warning)
+            msg.setText("NO FILE...")
+            msg.setIcon(QMessageBox.Information)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
             style_gray.msgsheetstyle(msg)
 
             x = msg.exec_()
+
+        else:
+            path = "uzsakymai_list"
+            # Check whether the specified path exists or not
+            if not os.path.isdir(path):
+                os.makedirs(path)
+
+            photoPath = "uzsakymai_list/" + self.filename + self.filetype
+
+            if not os.path.isfile(photoPath):
+                self.ordersWriteToFile(self.photo, photoPath)
+
+            os.startfile(os.path.abspath(os.getcwd()) + "/" + photoPath, 'open')
+
+            con.close()
+
+        # except (Exception, psycopg2.Error) as error:
+        #     print("Error while fetching data from PostgreSQL", error)
+        #     msg = QMessageBox()
+        #     msg.setWindowTitle("ERROR...")
+        #     msg.setText(f"Please first select ROW you want to open.")
+        #     msg.setIcon(QMessageBox.Warning)
+        #     msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+        #
+        #     style_gray.msgsheetstyle(msg)
+        #
+        #     x = msg.exec_()
 
     def MainClose(self):
         """exit app"""

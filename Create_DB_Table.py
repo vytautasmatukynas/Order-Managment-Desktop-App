@@ -31,8 +31,9 @@ cur.execute(("""CREATE TABLE IF NOT EXISTS orders (
             order_file TEXT,
             update_date TEXT,
             filename TEXT,
+            photo BYTEA NOT NULL,
             filetype TEXT,
-            filedir BYTEA NOT NULL
+            filedir TEXT
             )
             """))
 
