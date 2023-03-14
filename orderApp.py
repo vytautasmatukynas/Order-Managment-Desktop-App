@@ -79,7 +79,7 @@ class MainMenu(QMainWindow):
         self.tableWidgets()
         self.timeWidget()
         self.layouts()
-        # self.updateInfoOnStart()
+        self.updateInfoOnStart()
 
     def menubar(self):
         """Menu bar"""
@@ -95,7 +95,7 @@ class MainMenu(QMainWindow):
         file.addAction(new)
 
         file.addSeparator()
-        save = QAction("../save", self)
+        save = QAction("save", self)
         save.triggered.connect(self.save)
         save.setShortcut("Ctrl+S")
         save.setIcon(QIcon("icons/save.png"))
@@ -160,7 +160,7 @@ class MainMenu(QMainWindow):
         # Submenu bar
         UpdateApp = QAction("Check for Updates", self)
         UpdateApp.setIcon(QIcon("icons/update.png"))
-        # UpdateApp.triggered.connect(self.updateInfo)
+        UpdateApp.triggered.connect(self.updateInfo)
         help.addAction(UpdateApp)
         help.addSeparator()
         Info = QAction("About", self)
@@ -168,100 +168,100 @@ class MainMenu(QMainWindow):
         Info.triggered.connect(self.helpinfo)
         help.addAction(Info)
 
-    # def updateInfoOnStart(self):
-    #     """version check"""
-    #     try:
-    #         # Version file link
-    #         response = requests.get(
-    #             'https://gist.githubusercontent.com/xxxxxx')
-    #         data = response.text
-    #
-    #         if float(data) > float(__version__):
-    #             msg = QMessageBox()
-    #             msg.setWindowTitle("UPDATE MANAGER")
-    #             msg.setText('Update! Version {} to {}.'.format(__version__, data))
-    #             msg.setIcon(QMessageBox.Information)
-    #             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-    #             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    #
-    #             style_gray.msgsheetstyle(msg)
-    #
-    #             x = msg.exec_()
-    #
-    #             if (x == QMessageBox.Yes):
-    #                 # Donwload file link
-    #                 webbrowser.open_new_tab(
-    #                     'https://drive.google.com/file/xxxxxxx')
-    #
-    #                 self.MainClose()
-    #
-    #             else:
-    #                 pass
-    #
-    #         else:
-    #             pass
-    #
-    #     except:
-    #         msg = QMessageBox()
-    #         msg.setWindowTitle("ERROR...")
-    #         msg.setText("Error, check your internet connection or\n"
-    #                     "contact system administrator.")
-    #         msg.setIcon(QMessageBox.Warning)
-    #         msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-    #
-    #         style_gray.msgsheetstyle(msg)
-    #
-    #         x = msg.exec_()
-    #
-    # def updateInfo(self):
-    #     try:
-    #         response = requests.get(
-    #             'https://gist.githubusercontent.com/xxxxxxx')
-    #         data = response.text
-    #
-    #         if float(data) > float(__version__):
-    #             msg = QMessageBox()
-    #             msg.setWindowTitle("UPDATE MANAGER")
-    #             msg.setText('Update! Version {} to {}.'.format(__version__, data))
-    #             msg.setIcon(QMessageBox.Information)
-    #             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-    #             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    #
-    #             style_gray.msgsheetstyle(msg)
-    #
-    #             x = msg.exec_()
-    #
-    #             if (x == QMessageBox.Yes):
-    #                 webbrowser.open_new_tab(
-    #                     'https://drive.google.com/file/xxxxxxxx')
-    #
-    #                 self.MainClose()
-    #
-    #             else:
-    #                 pass
-    #
-    #         else:
-    #             msg = QMessageBox()
-    #             msg.setWindowTitle("UPDATE MANAGER")
-    #             msg.setText('No updates, version {}.'.format(__version__))
-    #             msg.setIcon(QMessageBox.Information)
-    #             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-    #
-    #             style_gray.msgsheetstyle(msg)
-    #
-    #             x = msg.exec_()
-    #
-    #     except:
-    #         msg = QMessageBox()
-    #         msg.setWindowTitle("ERROR...")
-    #         msg.setText("Error, check your internet connection or\n"
-    #                     "contact system administrator.")
-    #         msg.setIcon(QMessageBox.Warning)
-    #         msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-    #
-    #         style_gray.msgsheetstyle(msg)
-    #
-    #         x = msg.exec_()
+    def updateInfoOnStart(self):
+        """version check"""
+        try:
+            # Version file link
+            response = requests.get(
+                'https://gist.githubusercontent.com/xxxxxx')
+            data = response.text
+
+            if float(data) > float(__version__):
+                msg = QMessageBox()
+                msg.setWindowTitle("UPDATE MANAGER")
+                msg.setText('Update! Version {} to {}.'.format(__version__, data))
+                msg.setIcon(QMessageBox.Information)
+                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+                style_gray.msgsheetstyle(msg)
+
+                x = msg.exec_()
+
+                if (x == QMessageBox.Yes):
+                    # Donwload file link
+                    webbrowser.open_new_tab(
+                        'https://drive.google.com/file/xxxxxxx')
+
+                    self.MainClose()
+
+                else:
+                    pass
+
+            else:
+                pass
+
+        except:
+            msg = QMessageBox()
+            msg.setWindowTitle("ERROR...")
+            msg.setText("Error, check your internet connection or\n"
+                        "contact system administrator.")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+
+            style_gray.msgsheetstyle(msg)
+
+            x = msg.exec_()
+
+    def updateInfo(self):
+        try:
+            response = requests.get(
+                'https://gist.githubusercontent.com/xxxxxxx')
+            data = response.text
+
+            if float(data) > float(__version__):
+                msg = QMessageBox()
+                msg.setWindowTitle("UPDATE MANAGER")
+                msg.setText('Update! Version {} to {}.'.format(__version__, data))
+                msg.setIcon(QMessageBox.Information)
+                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+                style_gray.msgsheetstyle(msg)
+
+                x = msg.exec_()
+
+                if (x == QMessageBox.Yes):
+                    webbrowser.open_new_tab(
+                        'https://drive.google.com/file/xxxxxxxx')
+
+                    self.MainClose()
+
+                else:
+                    pass
+
+            else:
+                msg = QMessageBox()
+                msg.setWindowTitle("UPDATE MANAGER")
+                msg.setText('No updates, version {}.'.format(__version__))
+                msg.setIcon(QMessageBox.Information)
+                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+
+                style_gray.msgsheetstyle(msg)
+
+                x = msg.exec_()
+
+        except:
+            msg = QMessageBox()
+            msg.setWindowTitle("ERROR...")
+            msg.setText("Error, check your internet connection or\n"
+                        "contact system administrator.")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+
+            style_gray.msgsheetstyle(msg)
+
+            x = msg.exec_()
 
     def helpinfo(self):
         # QMessageBox.information(self, "ABOUT", "If you want to find a needle in a haystack,\n"
