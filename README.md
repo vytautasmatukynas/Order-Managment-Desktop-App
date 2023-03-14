@@ -4,10 +4,12 @@ python, pyqt5, postgresql
 
 Simple order managment dekstop app, where you can store your orders.
 App shows when orders are late, you can attach order files .xlm .pdf and etc, you can add link to order docs folder.
-There is menubar and right mouse click menu bar whit new, delete and etc.
+There is menu-bar and right mouse click whit new, delete and etc.
 When you select row, you can delete it.
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224933673-f9a844f1-46c2-4bac-b948-79dd18b7860c.png)
+
+![paveikslas](https://user-images.githubusercontent.com/51360361/224936514-8ea8205e-288a-49f4-8dd5-a885e5b47785.png)
 
 New order window:
 
@@ -25,7 +27,7 @@ There is tree table to sort items:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224935150-bdfb7fba-40f7-40e2-8d92-31fb6f650b40.png)
 
-OFc there is search, first search sorts items, second search select items in table:
+Ofc there is search, first search sorts items, second search select items in table:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224935303-c8f94a3e-2f54-4a9a-965d-3f93f68d824b.png)
 
@@ -33,7 +35,14 @@ OFc there is search, first search sorts items, second search select items in tab
 
 You can export your table to .pdf .xlm. .csv:
 
+![paveikslas](https://user-images.githubusercontent.com/51360361/224936731-190de9fa-2636-4509-b9bc-24e881166b0c.png)
+
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224936097-8a496102-55db-4dd1-8347-af269b831e58.png)
+
+Ofc you can print your table:
+
+![paveikslas](https://user-images.githubusercontent.com/51360361/224936879-80a42c27-2c6d-4203-be02-a263d9101908.png)
+
 
 
 
