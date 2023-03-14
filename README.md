@@ -35,7 +35,7 @@ Ofc there is search, first search sorts items, second search select items in tab
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224935406-15e3100a-564e-4c00-8c50-6032f889da1a.png)
 
-You can export your table to .pdf .xlm. .csv:
+You can export your table to .pdf .xls .csv:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224936731-190de9fa-2636-4509-b9bc-24e881166b0c.png)
 
