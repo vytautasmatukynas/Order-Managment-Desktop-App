@@ -19,7 +19,7 @@ Double click on row and update window pop-up:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224934565-75110bb4-4d38-479b-874e-8340254157d0.png)
 
-There pop-up window in menu-bar settings section - add new combo-box items:
+There is pop-up window in menu-bar settings section where you can add new combo-box items:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224937444-2698bde3-70b4-4ff5-8610-22b7b9fd3528.png)
 
