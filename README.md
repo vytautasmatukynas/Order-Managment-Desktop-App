@@ -14,7 +14,7 @@ App shows when orders are late, you can attach order files .xlm .pdf .jpg .png, 
 
 Double click on row and "Update" window dialog:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224934565-75110bb4-4d38-479b-874e-8340254157d0.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/225279085-cf447e9a-090a-45e4-a88c-f8875873b43e.png)
 
 There is dialog window in menu-bar "Settings" section where you can add new combo-box items:
 
