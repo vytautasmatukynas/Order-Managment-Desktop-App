@@ -919,14 +919,14 @@ class MainMenu(QMainWindow):
 
     def save(self):
         try:
-            table_name = ""
+            self.table_name = ""
 
             if self.treeTable.currentItem() == self.ordersSelect or \
                     self.treeTable.currentItem() == self.ordersSelect.child(0) or \
                     self.treeTable.currentItem() == self.ordersSelect.child(1):
-                table_name = "orders"
+                self.table_name = "orders"
 
-            query = """SELECT * FROM {}""".format(table_name)
+            query = """SELECT * FROM {}""".format(self.table_name)
 
             conn = psycopg2.connect(
                 **params
@@ -936,7 +936,7 @@ class MainMenu(QMainWindow):
 
             outputquery = "COPY ({0}) TO STDOUT WITH CSV HEADER".format(query)
 
-            with open('{}'.format(table_name), 'wb') as f:
+            with open('{}'.format(self.table_name), 'wb') as f:
                 cur.copy_expert(outputquery, f)
 
             conn.close()
@@ -963,7 +963,7 @@ class MainMenu(QMainWindow):
             dst_path = r'save\{}_{}'.format(table_name, datetime.toPyDate())
             shutil.move(src_path, dst_path)
 
-   def saveAs(self):
+    def saveAs(self):
         """save table to .xls .csv"""
         try:
             model = ""
@@ -973,6 +973,7 @@ class MainMenu(QMainWindow):
                     self.treeTable.currentItem() == self.ordersSelect.child(1):
                 model = self.ordersTable.model()
                 table = self.ordersTable
+                self.table_name = orders
 
             filename, file_end = QFileDialog.getSaveFileName(self, 'Save', '',
                                                              ".xls(*.xls);; .csv(*.csv);; .pdf(*.pdf)")
@@ -988,15 +989,29 @@ class MainMenu(QMainWindow):
                 font.bold = True
                 style.font = font
 
-                # iterate over visible columns only
-                visible_cols = [c for c in range(model.columnCount()) if self.ordersTable.isColumnHidden(c) == False]
-                for i, c in enumerate(visible_cols):
-                    text = model.headerData(c, QtCore.Qt.Horizontal)
-                    sheet.write(0, i, text, style=style)
+                # set borders for the style
+                borders = xlwt.Borders()
+                borders.left = xlwt.Borders.THIN
+                borders.right = xlwt.Borders.THIN
+                borders.top = xlwt.Borders.THIN
+                borders.bottom = xlwt.Borders.THIN
+                style.borders = borders
 
+                # iterate over visible columns only
+                visible_cols = [c for c in range(model.columnCount()) if table.isColumnHidden(c) == False]
+                for i, c in enumerate(visible_cols):
+                    header_text = model.headerData(c, QtCore.Qt.Horizontal)
+                    sheet.write(0, i, header_text, style=style)
+
+                    col_width = len(str(header_text))  # initialize column width to the length of the header text
                     for r in range(model.rowCount()):
-                        text = model.data(model.index(r, c))
-                        sheet.write(r + 1, i, text)
+                        text = str(model.data(model.index(r, c)))
+                        col_width = max(col_width, len(text))  # update column width based on the length of the text
+                        sheet.write(r + 1, i, text)  # write cell data to the Excel sheet
+
+                    # if the column width is less than the header width, set the column width to the header width
+                    if sheet.col(i).width < 256 * (col_width + 1):
+                        sheet.col(i).width = 256 * (col_width + 1)
 
                 wbk.save(filename)
 
@@ -1015,15 +1030,6 @@ class MainMenu(QMainWindow):
                     cur.copy_expert(outputquery, f)
 
                 conn.close()
-
-                path = "save"
-                isExist = os.path.exists(path)
-                if not isExist:
-                    os.makedirs(path)
-
-                src_path = r'{}'.format(self.table_name)
-                dst_path = r'save\{}_{}'.format(self.table_name, datetime.toPyDate())
-                shutil.move(src_path, dst_path)
 
             elif file_end == ".pdf(*.pdf)":
                 printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.PrinterResolution)
@@ -1065,7 +1071,6 @@ class MainMenu(QMainWindow):
         except:
             pass
 
-
     def handlePrint(self):
         """send info to print and prints"""
         dialog = QtPrintSupport.QPrintDialog()
@@ -1094,13 +1099,41 @@ class MainMenu(QMainWindow):
                 self.treeTable.currentItem() == self.ordersSelect.child(0) or \
                 self.treeTable.currentItem() == self.ordersSelect.child(1):
 
-            table = cursor.insertTable(
-                self.ordersTable.rowCount(), self.ordersTable.columnCount(), tableFormat)
-            for row in range(table.rows()):
-                for col in range(table.columns()):
-                    cursor.insertText(self.ordersTable.item(row, col).text())
-                    cursor.movePosition(QtGui.QTextCursor.NextCell)
-            document.print_(printer)
+            table_name = self.ordersTable
+
+        visible_columns = [col for col in range(table_name.columnCount())
+                           if not table_name.isColumnHidden(col)]
+
+        # Get the number of visible columns
+        num_visible_cols = len(visible_columns)
+
+        # Insert a table with the number of visible columns and header rows
+        table = cursor.insertTable(table_name.rowCount() + 1, num_visible_cols, tableFormat)
+
+        # Set the background color of the header row to light gray and make it bold
+        header_format = table.cellAt(0, 0).format()
+        header_format.setBackground(QtGui.QColor(230, 230, 230))
+        header_cursor = table.cellAt(0, 0).firstCursorPosition()
+        header_cursor.insertText("")
+        header_format.setFontWeight(QtGui.QFont.Bold)
+
+        for col_index, col in enumerate(visible_columns):
+            # Insert header text
+            header_cursor = table.cellAt(0, col_index).firstCursorPosition()
+            header_cursor.insertText(table_name.horizontalHeaderItem(col).text())
+            header_format.setFontWeight(QtGui.QFont.Bold)
+            header_format.setBackground(QtGui.QColor(230, 230, 230))
+            # Insert data text
+            for row in range(1, table.rows()):
+                cursor = table.cellAt(row, col_index).firstCursorPosition()
+                cursor.insertText(table_name.item(row - 1, col).text())
+
+        # Set the border of the table
+        frame_format = table.format()
+        frame_format.setBorderStyle(QtGui.QTextFrameFormat.BorderStyle_Solid)
+        frame_format.setBorder(0.5)
+        frame_format.setBorderBrush(QtGui.QBrush(QtGui.QColor(0, 0, 0)))
+        document.print_(printer)
 
     def openFolder(self):
         """open selected folder"""
