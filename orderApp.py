@@ -963,7 +963,7 @@ class MainMenu(QMainWindow):
             dst_path = r'save\{}_{}'.format(table_name, datetime.toPyDate())
             shutil.move(src_path, dst_path)
 
-    def saveAs(self):
+   def saveAs(self):
         """save table to .xls .csv"""
         try:
             model = ""
@@ -972,6 +972,7 @@ class MainMenu(QMainWindow):
                     self.treeTable.currentItem() == self.ordersSelect.child(0) or \
                     self.treeTable.currentItem() == self.ordersSelect.child(1):
                 model = self.ordersTable.model()
+                table = self.ordersTable
 
             filename, file_end = QFileDialog.getSaveFileName(self, 'Save', '',
                                                              ".xls(*.xls);; .csv(*.csv);; .pdf(*.pdf)")
@@ -979,7 +980,7 @@ class MainMenu(QMainWindow):
             if not filename:
                 return
 
-            if file_end == ".xls(*.xls)" or file_end == ".csv(*.csv)":
+            if file_end == ".xls(*.xls)":
                 wbk = xlwt.Workbook()
                 sheet = wbk.add_sheet("sheet", cell_overwrite_ok=True)
                 style = xlwt.XFStyle()
@@ -987,41 +988,42 @@ class MainMenu(QMainWindow):
                 font.bold = True
                 style.font = font
 
-                for c in range(model.columnCount()):
+                # iterate over visible columns only
+                visible_cols = [c for c in range(model.columnCount()) if self.ordersTable.isColumnHidden(c) == False]
+                for i, c in enumerate(visible_cols):
                     text = model.headerData(c, QtCore.Qt.Horizontal)
-                    sheet.write(0, c + 1, text, style=style)
+                    sheet.write(0, i, text, style=style)
 
-                for r in range(model.rowCount()):
-                    text = model.headerData(r, QtCore.Qt.Vertical)
-                    sheet.write(r + 1, 0, text, style=style)
-
-                for c in range(model.columnCount()):
                     for r in range(model.rowCount()):
                         text = model.data(model.index(r, c))
-                        sheet.write(r + 1, c + 1, text)
+                        sheet.write(r + 1, i, text)
+
                 wbk.save(filename)
 
             elif file_end == ".csv(*.csv)":
-                wbk = xlwt.Workbook()
-                sheet = wbk.add_sheet("sheet", cell_overwrite_ok=True)
-                style = xlwt.XFStyle()
-                font = xlwt.Font()
-                font.bold = True
-                style.font = font
+                query = """SELECT * FROM {}""".format(self.table_name)
 
-                for c in range(model.columnCount()):
-                    text = model.headerData(c, QtCore.Qt.Horizontal)
-                    sheet.write(0, c + 1, text, style=style)
+                conn = psycopg2.connect(
+                    **params
+                )
 
-                for r in range(model.rowCount()):
-                    text = model.headerData(r, QtCore.Qt.Vertical)
-                    sheet.write(r + 1, 0, text, style=style)
+                cur = conn.cursor()
 
-                for c in range(model.columnCount()):
-                    for r in range(model.rowCount()):
-                        text = model.data(model.index(r, c))
-                        sheet.write(r + 1, c + 1, text)
-                wbk.save(filename)
+                outputquery = "COPY ({0}) TO STDOUT WITH CSV HEADER".format(query)
+
+                with open('{}'.format(self.table_name), 'wb') as f:
+                    cur.copy_expert(outputquery, f)
+
+                conn.close()
+
+                path = "save"
+                isExist = os.path.exists(path)
+                if not isExist:
+                    os.makedirs(path)
+
+                src_path = r'{}'.format(self.table_name)
+                dst_path = r'save\{}_{}'.format(self.table_name, datetime.toPyDate())
+                shutil.move(src_path, dst_path)
 
             elif file_end == ".pdf(*.pdf)":
                 printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.PrinterResolution)
@@ -1044,14 +1046,16 @@ class MainMenu(QMainWindow):
                 html += "<table><thead>"
                 html += "<tr>"
                 for c in range(model.columnCount()):
-                    html += "<th>{}</th>".format(model.headerData(c, QtCore.Qt.Horizontal))
+                    if not table.isColumnHidden(c):
+                        html += "<th>{}</th>".format(model.headerData(c, QtCore.Qt.Horizontal))
 
                 html += "</tr></thead>"
                 html += "<tbody>"
                 for r in range(model.rowCount()):
                     html += "<tr>"
                     for c in range(model.columnCount()):
-                        html += "<td>{}</td>".format(model.index(r, c).data() or "")
+                        if not table.isColumnHidden(c):
+                            html += "<td>{}</td>".format(model.index(r, c).data() or "")
                     html += "</tr>"
                 html += "</tbody></table>"
                 doc.setHtml(html)
@@ -1060,6 +1064,7 @@ class MainMenu(QMainWindow):
 
         except:
             pass
+
 
     def handlePrint(self):
         """send info to print and prints"""
