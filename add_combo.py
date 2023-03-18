@@ -55,17 +55,17 @@ class AddCombo(QDialog):
     def widgets(self):
 
         # uzsakymai ########################
-        self.imoneE = QLineEdit()
-        self.imoneE.setFont(QFont("Times", 12))
+        self.companyE = QLineEdit()
+        self.companyE.setFont(QFont("Times", 12))
 
-        self.braizeE = QLineEdit()
-        self.braizeE.setFont(QFont("Times", 12))
+        self.clientE = QLineEdit()
+        self.clientE.setFont(QFont("Times", 12))
 
-        self.projektasE = QLineEdit()
-        self.projektasE.setFont(QFont("Times", 12))
+        self.phoneE = QLineEdit()
+        self.phoneE.setFont(QFont("Times", 12))
 
-        self.pavadinimasE = QLineEdit()
-        self.pavadinimasE.setFont(QFont("Times", 12))
+        self.nameE = QLineEdit()
+        self.nameE.setFont(QFont("Times", 12))
 
         self.okBtn = QPushButton("UPDATE")
         self.okBtn.clicked.connect(self.addCombo)
@@ -85,10 +85,10 @@ class AddCombo(QDialog):
         self.widgetFrame.setFont(QFont("Times", 12))
 
         ############################## UZSAKYMAI
-        self.widgetLayout.addRow(QLabel("Company: "), self.imoneE)
-        self.widgetLayout.addRow(QLabel("Client: "), self.braizeE)
-        self.widgetLayout.addRow(QLabel("Phone Number: "), self.projektasE)
-        self.widgetLayout.addRow(QLabel("Order Name: "), self.pavadinimasE)
+        self.widgetLayout.addRow(QLabel("Company: "), self.companyE)
+        self.widgetLayout.addRow(QLabel("Client: "), self.clientE)
+        self.widgetLayout.addRow(QLabel("Phone Number: "), self.phoneE)
+        self.widgetLayout.addRow(QLabel("Order Name: "), self.nameE)
         self.widgetLayout.addRow(QLabel(""))
         self.widgetFrame.setLayout(self.widgetLayout)
 
@@ -101,10 +101,10 @@ class AddCombo(QDialog):
         self.setLayout(self.mainLayout)
 
     def addCombo(self):
-        company = self.imoneE.text().upper()
-        client = self.braizeE.text().upper()
-        phone = self.projektasE.text().upper()
-        name = self.pavadinimasE.text()
+        company = self.companyE.text().upper()
+        client = self.clientE.text().upper()
+        phone = self.phoneE.text().upper()
+        name = self.nameE.text()
 
         try:
             con = psycopg2.connect(
