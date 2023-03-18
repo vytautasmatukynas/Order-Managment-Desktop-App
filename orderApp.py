@@ -618,7 +618,7 @@ class MainMenu(QMainWindow):
                     """SELECT id, company, client, phone_number, order_name,
                     order_term, status, comments, order_folder, order_file, update_date,
                     filename, filetype, filedir FROM orders
-                    WHERE statusas = 'FINISHED' 
+                    WHERE status = 'FINISHED' 
                     ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
                 query = cur.fetchall()
 
@@ -672,7 +672,7 @@ class MainMenu(QMainWindow):
                     """SELECT id, company, client, phone_number, order_name,
                     order_term, status, comments, order_folder, order_file, update_date,
                     filename, filetype, filedir FROM orders 
-                    WHERE statusas = 'IN PROCESS' 
+                    WHERE status = 'IN PROCESS' 
                     ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
                 query = cur.fetchall()
 
