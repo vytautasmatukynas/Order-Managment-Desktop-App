@@ -1,9 +1,10 @@
 import os
-import shutil
 import sys
 import webbrowser
 from pathlib import Path
 
+# from configparser import ConfigParser
+import pandas
 import psycopg2
 import requests
 import xlwt
@@ -11,13 +12,11 @@ from PyQt5 import QtWidgets, QtCore, QtPrintSupport, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-# from configparser import ConfigParser
-import pandas
 
 import add_combo
 import add_order
-import style_gray
 import config
+import style_gray
 
 params = config.sql_db
 
@@ -370,12 +369,29 @@ class MainMenu(QMainWindow):
         self.treeTable.setColumnCount(1)
         self.treeTable.setFixedWidth(150)
 
+        con = psycopg2.connect(
+            **params
+        )
+
+        cur = con.cursor()
+
+        cur.execute(
+            """SELECT order_name FROM orders""")
+        query = cur.fetchall()
+
+        con.close()
+
         self.ordersSelect = QTreeWidgetItem(self.treeTable, ["Orders"])
         self.ordersSelect.setExpanded(True)
 
-        self.ordersSelect1 = ["Finished", "In Process"]
-        for item1 in self.ordersSelect1:
-            self.ordersSelect.addChild(QTreeWidgetItem([item1]))
+        self.get_headers = [i[0] for i in query]
+        self.clean_get_header = set(self.get_headers)
+        self.headers = list(self.clean_get_header)
+        self.headers.sort()
+
+        self.ordersSelect1 = self.headers
+        for item in self.ordersSelect1:
+            self.ordersSelect.addChild(QTreeWidgetItem([item]))
 
         self.treeTable.clicked.connect(self.listTables)
 
@@ -602,113 +618,80 @@ class MainMenu(QMainWindow):
 
                 con.close()
 
-            elif self.treeTable.currentItem() == self.ordersSelect.child(0):
-                self.tableRightLayout.setCurrentIndex(0)
-                self.ordersTable.setFont(QFont("Times", 10))
-                for i in reversed(range(self.ordersTable.rowCount())):
-                    self.ordersTable.removeRow(i)
-
-                conn = psycopg2.connect(
+            else:
+                con = psycopg2.connect(
                     **params
                 )
 
-                cur = conn.cursor()
+                cur = con.cursor()
 
                 cur.execute(
-                    """SELECT id, company, client, phone_number, order_name,
-                    order_term, status, comments, order_folder, order_file, update_date,
-                    filename, filetype, filedir FROM orders
-                    WHERE status = 'FINISHED' 
-                    ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
+                    """SELECT order_name FROM orders""")
                 query = cur.fetchall()
 
-                for row_date in query:
-                    row_number = self.ordersTable.rowCount()
-                    self.ordersTable.insertRow(row_number)
-                    for column_number, data in enumerate(row_date):
-                        setitem = QTableWidgetItem(str(data))
-                        # check current date and table entry, if nor equal or more make it red
-                        listdata = []
-                        if column_number == 5:
-                            listdata.append(str(data))
-                            if listdata[0] == "+" or listdata[0] == "-":
-                                listdata.pop()
-                        for i in listdata:
-                            if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
-                                None
-                            elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
-                                    or int(i[0:4]) < int(date[0:4]):
-                                setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
-                                # setitem.setForeground(QtGui.QColor(255, 255, 255))
+                con.close()
 
-                        # list of names and list of colours to name
-                        list_names = ['FINISHED', 'IN PROCESS']
-                        list_colors = [(0, 204, 0, 110), (240, 248, 255)]
-                        for count_num in range(0, len(list_names)):
-                            while count_num < len(list_names):
-                                if data == list_names[count_num]:
-                                    setitem.setBackground(QtGui.QColor(*list_colors[count_num]))
-                                count_num += 1
+                self.get_headers = [i[0] for i in query]
+                self.clean_get_header = set(self.get_headers)
+                self.headers = list(self.clean_get_header)
+                self.headers.sort()
 
-                        self.ordersTable.setItem(row_number, column_number, setitem)
+                for index_number in range(0, len(self.headers)):
+                    if self.treeTable.currentItem() == self.ordersSelect.child(index_number):
+                        self.tableRightLayout.setCurrentIndex(0)
+                        self.ordersTable.setFont(QFont("Times", 10))
+                        for i in reversed(range(self.ordersTable.rowCount())):
+                            self.ordersTable.removeRow(i)
 
-                self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+                        conn = psycopg2.connect(
+                            **params
+                        )
 
-                conn.close()
+                        cur = conn.cursor()
 
-            elif self.treeTable.currentItem() == self.ordersSelect.child(1):
-                self.tableRightLayout.setCurrentIndex(0)
-                self.ordersTable.setFont(QFont("Times", 10))
-                for i in reversed(range(self.ordersTable.rowCount())):
-                    self.ordersTable.removeRow(i)
+                        cur.execute(
+                            f"""SELECT id, company, client, phone_number, order_name,
+                            order_term, status, comments, order_folder, order_file, update_date,
+                            filename, filetype, filedir FROM orders
+                            WHERE order_name = '{self.headers[index_number]}' 
+                            ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
+                        query = cur.fetchall()
 
-                conn = psycopg2.connect(
-                    **params
-                )
+                        conn.close()
 
-                cur = conn.cursor()
+                        for row_date in query:
+                            row_number = self.ordersTable.rowCount()
+                            self.ordersTable.insertRow(row_number)
+                            for column_number, data in enumerate(row_date):
+                                setitem = QTableWidgetItem(str(data))
+                                # check current date and table entry, if nor equal or more make it red
+                                listdata = []
+                                if column_number == 5:
+                                    listdata.append(str(data))
+                                    if listdata[0] == "+" or listdata[0] == "-":
+                                        listdata.pop()
+                                for i in listdata:
+                                    if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
+                                        None
+                                    elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
+                                            or int(i[0:4]) < int(date[0:4]):
+                                        setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
+                                        # setitem.setForeground(QtGui.QColor(255, 255, 255))
 
-                cur.execute(
-                    """SELECT id, company, client, phone_number, order_name,
-                    order_term, status, comments, order_folder, order_file, update_date,
-                    filename, filetype, filedir FROM orders 
-                    WHERE status = 'IN PROCESS' 
-                    ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
-                query = cur.fetchall()
+                                # list of names and list of colours to name
+                                list_names = ['FINISHED', 'IN PROCESS']
+                                list_colors = [(0, 204, 0, 110), (240, 248, 255)]
+                                for count_num in range(0, len(list_names)):
+                                    while count_num < len(list_names):
+                                        if data == list_names[count_num]:
+                                            setitem.setBackground(QtGui.QColor(*list_colors[count_num]))
+                                        count_num += 1
 
-                for row_date in query:
-                    row_number = self.ordersTable.rowCount()
-                    self.ordersTable.insertRow(row_number)
-                    for column_number, data in enumerate(row_date):
-                        setitem = QTableWidgetItem(str(data))
-                        # check current date and table entry, if nor equal or more make it red
-                        listdata = []
-                        if column_number == 5:
-                            listdata.append(str(data))
-                            if listdata[0] == "+" or listdata[0] == "-":
-                                listdata.pop()
-                        for i in listdata:
-                            if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
-                                None
-                            elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
-                                    or int(i[0:4]) < int(date[0:4]):
-                                setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
-                                # setitem.setForeground(QtGui.QColor(255, 255, 255))
+                                self.ordersTable.setItem(row_number, column_number, setitem)
 
-                        # list of names and list of colours to name
-                        list_names = ['FINISHED', 'IN PROCESS']
-                        list_colors = [(0, 204, 0, 110), (240, 248, 255)]
-                        for count_num in range(0, len(list_names)):
-                            while count_num < len(list_names):
-                                if data == list_names[count_num]:
-                                    setitem.setBackground(QtGui.QColor(*list_colors[count_num]))
-                                count_num += 1
+                        self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-                        self.ordersTable.setItem(row_number, column_number, setitem)
-
-                self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
-                conn.close()
+                    index_number += 1
 
         except (Exception, psycopg2.Error) as error:
             print("Error while fetching data from PostgreSQL", error)
@@ -963,7 +946,6 @@ class MainMenu(QMainWindow):
 
             x = msg.exec_()
 
-
     def saveAs(self):
         """save table to .xls .csv"""
         try:
@@ -974,7 +956,7 @@ class MainMenu(QMainWindow):
                     self.treeTable.currentItem() == self.ordersSelect.child(1):
                 model = self.ordersTable.model()
                 table = self.ordersTable
-                self.table_name = orders
+                self.table_name = "orders"
 
             filename, file_end = QFileDialog.getSaveFileName(self, 'Save', '',
                                                              ".xls(*.xls);; .csv(*.csv);; .pdf(*.pdf)")
@@ -1032,9 +1014,8 @@ class MainMenu(QMainWindow):
                 # Get the directory path from the selected file path
                 directory_path = os.path.dirname(filename)
 
-                # Set the file name to the name entered in the QFileDialog
+                # Set the file name to the name entered in the QFileDialog with csv extension
                 file_name = os.path.join(directory_path, os.path.basename(filename))
-                print(os.path.basename(filename))
 
                 data.to_csv(file_name)
 
@@ -1107,7 +1088,6 @@ class MainMenu(QMainWindow):
         if self.treeTable.currentItem() == self.ordersSelect or \
                 self.treeTable.currentItem() == self.ordersSelect.child(0) or \
                 self.treeTable.currentItem() == self.ordersSelect.child(1):
-
             table_name = self.ordersTable
 
         visible_columns = [col for col in range(table_name.columnCount())
@@ -1199,61 +1179,61 @@ class MainMenu(QMainWindow):
     def openFile(self):
         """open selected file"""
         global ordersId
-        # try:
-        con = psycopg2.connect(
-            **params
-        )
+        try:
+            con = psycopg2.connect(
+                **params
+            )
 
-        c = con.cursor()
+            c = con.cursor()
 
-        c.execute("""SELECT * FROM orders WHERE ID = %s""", (ordersId,))
-        uzsakymai = c.fetchone()
+            c.execute("""SELECT * FROM orders WHERE ID = %s""", (ordersId,))
+            uzsakymai = c.fetchone()
 
-        self.filename = uzsakymai[11]
-        self.photo = uzsakymai[12]
-        self.filetype = uzsakymai[13]
+            self.filename = uzsakymai[11]
+            self.photo = uzsakymai[12]
+            self.filetype = uzsakymai[13]
 
-        str_none = ""
+            str_none = ""
 
-        if self.filetype == None or self.filetype == str_none \
-                or self.photo == None or self.photo == str_none \
-                or self.filename == None or self.filename == str_none:
+            if self.filetype == None or self.filetype == str_none \
+                    or self.photo == None or self.photo == str_none \
+                    or self.filename == None or self.filename == str_none:
+                msg = QMessageBox()
+                msg.setWindowTitle("ERROR...")
+                msg.setText("NO FILE...")
+                msg.setIcon(QMessageBox.Information)
+                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+
+                style_gray.msgsheetstyle(msg)
+
+                x = msg.exec_()
+
+            else:
+                path = "uzsakymai_list"
+                # Check whether the specified path exists or not
+                if not os.path.isdir(path):
+                    os.makedirs(path)
+
+                photoPath = "uzsakymai_list/" + self.filename + self.filetype
+
+                if not os.path.isfile(photoPath):
+                    self.ordersWriteToFile(self.photo, photoPath)
+
+                os.startfile(os.path.abspath(os.getcwd()) + "/" + photoPath, 'open')
+
+                con.close()
+
+        except (Exception, psycopg2.Error) as error:
+            print("Error while fetching data from PostgreSQL", error)
             msg = QMessageBox()
             msg.setWindowTitle("ERROR...")
-            msg.setText("NO FILE...")
-            msg.setIcon(QMessageBox.Information)
+            msg.setText(f"Please first select ROW you want to open.")
+            msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
             style_gray.msgsheetstyle(msg)
 
             x = msg.exec_()
-
-        else:
-            path = "uzsakymai_list"
-            # Check whether the specified path exists or not
-            if not os.path.isdir(path):
-                os.makedirs(path)
-
-            photoPath = "uzsakymai_list/" + self.filename + self.filetype
-
-            if not os.path.isfile(photoPath):
-                self.ordersWriteToFile(self.photo, photoPath)
-
-            os.startfile(os.path.abspath(os.getcwd()) + "/" + photoPath, 'open')
-
-            con.close()
-
-        # except (Exception, psycopg2.Error) as error:
-        #     print("Error while fetching data from PostgreSQL", error)
-        #     msg = QMessageBox()
-        #     msg.setWindowTitle("ERROR...")
-        #     msg.setText(f"Please first select ROW you want to open.")
-        #     msg.setIcon(QMessageBox.Warning)
-        #     msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        #
-        #     style_gray.msgsheetstyle(msg)
-        #
-        #     x = msg.exec_()
 
     def MainClose(self):
         """exit app"""
