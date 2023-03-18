@@ -22,9 +22,9 @@ There is dialog window in menu-bar "Settings" section where you can add new comb
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/224935028-eb23862e-3696-48c1-b8a6-660cc9c0dd14.png)
 
-There is tree-table to sort items:
+There is tree-table to sort items by ORDER_NAME:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224935150-bdfb7fba-40f7-40e2-8d92-31fb6f650b40.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/226143554-d1a70378-1658-454c-9ad3-2a51d0766e12.png)
 
 There is search - first search line sorts items, second search line select items in table:
 
