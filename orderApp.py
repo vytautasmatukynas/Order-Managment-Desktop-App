@@ -1029,7 +1029,14 @@ class MainMenu(QMainWindow):
 
                 data = pandas.DataFrame(query)
 
-                data.to_csv(f"{self.table_name}")
+                # Get the directory path from the selected file path
+                directory_path = os.path.dirname(filename)
+
+                # Set the file name to the name entered in the QFileDialog
+                file_name = os.path.join(directory_path, os.path.basename(filename))
+                print(os.path.basename(filename))
+
+                data.to_csv(file_name)
 
                 conn.close()
 
