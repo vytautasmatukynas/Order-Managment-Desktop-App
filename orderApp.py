@@ -11,24 +11,28 @@ from PyQt5 import QtWidgets, QtCore, QtPrintSupport, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from configparser import ConfigParser
+# from configparser import ConfigParser
+import pandas
 
 import add_combo
 import add_order
 import style_gray
+import config
 
-# create a parser
-parser = ConfigParser()
-# read config file
-parser.read('config.ini')
+params = config.sql_db
 
-params = {}
-if 'postgreDB' in parser:
-    for key in parser['postgreDB']:
-        params[key] = parser['postgreDB'][key]
-else:
-    raise Exception(
-        'Section {0} not found in the {1} file'.format('postgreDB', 'config.ini'))
+# # create a parser
+# parser = ConfigParser()
+# # read config file
+# parser.read('config.ini')
+#
+# params = {}
+# if 'postgreDB' in parser:
+#     for key in parser['postgreDB']:
+#         params[key] = parser['postgreDB'][key]
+# else:
+#     raise Exception(
+#         'Section {0} not found in the {1} file'.format('postgreDB', 'config.ini'))
 
 datetime = QDate.currentDate()
 year = datetime.year()
@@ -926,18 +930,24 @@ class MainMenu(QMainWindow):
                     self.treeTable.currentItem() == self.ordersSelect.child(1):
                 self.table_name = "orders"
 
-            query = """SELECT * FROM {}""".format(self.table_name)
-
             conn = psycopg2.connect(
                 **params
             )
 
             cur = conn.cursor()
 
-            outputquery = "COPY ({0}) TO STDOUT WITH CSV HEADER".format(query)
+            cur.execute("""SELECT * FROM {}""".format(self.table_name))
 
-            with open('{}'.format(self.table_name), 'wb') as f:
-                cur.copy_expert(outputquery, f)
+            query = cur.fetchall()
+
+            data = pandas.DataFrame(query)
+
+            path = "save"
+            isExist = os.path.exists(path)
+            if not isExist:
+                os.makedirs(path)
+
+            data.to_csv(f"save/{self.table_name}-{datetime.toPyDate()}")
 
             conn.close()
 
@@ -953,15 +963,6 @@ class MainMenu(QMainWindow):
 
             x = msg.exec_()
 
-        finally:
-            path = "../save"
-            isExist = os.path.exists(path)
-            if not isExist:
-                os.makedirs(path)
-
-            src_path = r'{}'.format(table_name)
-            dst_path = r'save\{}_{}'.format(table_name, datetime.toPyDate())
-            shutil.move(src_path, dst_path)
 
     def saveAs(self):
         """save table to .xls .csv"""
@@ -1016,18 +1017,19 @@ class MainMenu(QMainWindow):
                 wbk.save(filename)
 
             elif file_end == ".csv(*.csv)":
-                query = """SELECT * FROM {}""".format(self.table_name)
-
                 conn = psycopg2.connect(
                     **params
                 )
 
                 cur = conn.cursor()
 
-                outputquery = "COPY ({0}) TO STDOUT WITH CSV HEADER".format(query)
+                cur.execute("""SELECT * FROM {}""".format(self.table_name))
 
-                with open('{}'.format(self.table_name), 'wb') as f:
-                    cur.copy_expert(outputquery, f)
+                query = cur.fetchall()
+
+                data = pandas.DataFrame(query)
+
+                data.to_csv(f"{self.table_name}")
 
                 conn.close()
 
