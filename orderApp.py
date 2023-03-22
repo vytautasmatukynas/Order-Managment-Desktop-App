@@ -294,11 +294,7 @@ class MainMenu(QMainWindow):
         self.ordersTable.setColumnCount(11)
         self.ordersTable.setColumnHidden(0, True)
         self.ordersTable.setColumnHidden(8, True)
-        # self.uzsakymuTable.setColumnHidden(9, True)
         self.ordersTable.setSortingEnabled(True)
-
-        # for number in [1, 2, 3, 4, 5, 6, 9, 10]:
-        #     self.uzsakymuTable.setColumnWidth(number, 150)
 
         headers_uzsk = ["ID", "COMPANY", "CLIENT", "PHONE NUMBER", "ORDER NAME", "ORDER TERM",
                         "STATUS", "COMMENTS", "FOLDER LINK", "ORDER FILE", "UPDATED"]
@@ -325,13 +321,6 @@ class MainMenu(QMainWindow):
         # for column
         for number in [1, 2, 3, 4, 5, 6, 9, 10]:
             self.ordersTable.setItemDelegateForColumn(number, delegate)
-
-        # for all columns
-        # self.uzsakymuTable.setItemDelegate(delegate)
-        # self.atsarguTable.setItemDelegate(delegate)
-        # self.sanaudosTable.setItemDelegate(delegate)
-        # self.stelazasTable.setItemDelegate(delegate)
-        # self.rolikaiTable.setItemDelegate(delegate)
 
     def searchWidgets(self):
         self.cancelButton1 = QPushButton("CANCEL")
