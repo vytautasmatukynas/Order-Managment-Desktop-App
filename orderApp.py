@@ -48,6 +48,8 @@ __email__ = 'vytautas.matukynas@gmail.com'
 __status__ = 'Beta'
 _AppName_ = 'Order App'
 
+LINK_TO_VERSION = "link to version file"
+LINK_TO_FILE = "link to setup file"
 
 # align for QTable class, DELEGATE ALIGNMENT
 class AlignDelegate(QtWidgets.QStyledItemDelegate):
@@ -176,7 +178,7 @@ class MainMenu(QMainWindow):
         try:
             # Version file link
             response = requests.get(
-                'https://gist.githubusercontent.com/xxxxxx')
+                f'{LINK_TO_VERSION}')
             data = response.text
 
             if float(data) > float(__version__):
@@ -194,7 +196,7 @@ class MainMenu(QMainWindow):
                 if (x == QMessageBox.Yes):
                     # Donwload file link
                     webbrowser.open_new_tab(
-                        'https://drive.google.com/file/xxxxxxx')
+                        f'{LINK_TO_FILE}')
 
                     self.MainClose()
 
@@ -219,7 +221,7 @@ class MainMenu(QMainWindow):
     def updateInfo(self):
         try:
             response = requests.get(
-                'https://gist.githubusercontent.com/xxxxxxx')
+                f'{LINK_TO_VERSION}')
             data = response.text
 
             if float(data) > float(__version__):
@@ -236,7 +238,7 @@ class MainMenu(QMainWindow):
 
                 if (x == QMessageBox.Yes):
                     webbrowser.open_new_tab(
-                        'https://drive.google.com/file/xxxxxxxx')
+                        f'{LINK_TO_FILE}')
 
                     self.MainClose()
 
@@ -286,7 +288,7 @@ class MainMenu(QMainWindow):
 
     def tableWidgets(self):
         """Tables"""
-        # UZSAKYMAI TABLE
+        # ORDER TABLE
         self.emptyTable = QTableWidget()
         self.emptyTable.setColumnCount(0)
 
