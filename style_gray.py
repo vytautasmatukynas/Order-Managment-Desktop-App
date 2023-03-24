@@ -198,7 +198,16 @@ def SheetStyle(self):
                             background-color:steelblue;
                             color:white;
                             }
+                        
+                        
+                            QProgressBar {
+                            margin-top:-1px;
+                            margin-bottom:-1px;
+                            }
                             
+                            QProgressBar::chunk {
+                            background-color: steelblue;
+                            }
                             """)
 
 

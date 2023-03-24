@@ -83,6 +83,7 @@ class MainMenu(QMainWindow):
         self.toolBarInside()
         self.tableWidgets()
         self.timeWidget()
+        self.progressBar()
         self.layouts()
         self.updateInfoOnStart()
 
@@ -432,6 +433,11 @@ class MainMenu(QMainWindow):
         self.displayTxt = self.currentTime.toString('hh:mm:ss')
         self.Timer.setText(self.displayTxt)
 
+    def progressBar(self):
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setFixedWidth(150)
+        self.progress_bar.setAlignment(QtCore.Qt.AlignCenter)
+
     def layouts(self):
         """App layouts"""
         self.mainLayout = QVBoxLayout()
@@ -478,6 +484,7 @@ class MainMenu(QMainWindow):
 
         # Bottom layout
         self.bottomLayout.addWidget(QLabel(f"Order App {__version__} ({__status__})"), 98, alignment=Qt.AlignLeft)
+        self.bottomLayout.addWidget(self.progress_bar, 12, alignment=Qt.AlignLeft)
         self.bottomLayout.addWidget(QLabel(f"Current date/time: {datetime.toPyDate()}"), 1, alignment=Qt.AlignRight)
         self.bottomLayout.addWidget(self.Timer, 1, alignment=Qt.AlignRight)
 
@@ -607,6 +614,19 @@ class MainMenu(QMainWindow):
                 # Edit column cell disable
                 self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
+                row_count = cur.rowcount
+
+                for i in range(0, row_count):
+                    value = 100
+
+                    self.progress_bar.setRange(0, value)
+
+                    if value > 50:
+                        self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
+
+                    progress_val = int(((i + 1) / row_count) * 100)
+                    self.progress_bar.setValue(progress_val)
+
                 con.close()
 
             else:
@@ -620,8 +640,6 @@ class MainMenu(QMainWindow):
                     """SELECT order_name FROM orders""")
                 query = cur.fetchall()
 
-                con.close()
-
                 self.get_headers = [i[0] for i in query]
                 self.clean_get_header = set(self.get_headers)
                 self.headers = list(self.clean_get_header)
@@ -634,11 +652,7 @@ class MainMenu(QMainWindow):
                         for i in reversed(range(self.ordersTable.rowCount())):
                             self.ordersTable.removeRow(i)
 
-                        conn = psycopg2.connect(
-                            **params
-                        )
-
-                        cur = conn.cursor()
+                        cur = con.cursor()
 
                         cur.execute(
                             f"""SELECT id, company, client, phone_number, order_name,
@@ -648,7 +662,6 @@ class MainMenu(QMainWindow):
                             ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
                         query = cur.fetchall()
 
-                        conn.close()
 
                         for row_date in query:
                             row_number = self.ordersTable.rowCount()
@@ -682,7 +695,22 @@ class MainMenu(QMainWindow):
 
                         self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
+                    row_count = cur.rowcount
+
+                    for i in range(0, row_count):
+                        value = 100
+
+                        self.progress_bar.setRange(0, value)
+
+                        if value > 50:
+                            self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
+
+                        progress_val = int(((i + 1) / row_count) * 100)
+                        self.progress_bar.setValue(progress_val)
+
                     index_number += 1
+
+                con.close()
 
         except (Exception, psycopg2.Error) as error:
             print("Error while fetching data from PostgreSQL", error)
@@ -791,6 +819,19 @@ class MainMenu(QMainWindow):
 
                 self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
+                row_count = cur.rowcount
+
+                for i in range(0, row_count):
+                    value = 100
+
+                    self.progress_bar.setRange(0, value)
+
+                    if value > 50:
+                        self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
+
+                    progress_val = int(((i + 1) / row_count) * 100)
+                    self.progress_bar.setValue(progress_val)
+
                 conn.close()
 
         except (Exception, psycopg2.Error) as error:
@@ -876,6 +917,19 @@ class MainMenu(QMainWindow):
                         conn.close()
 
                         self.listTables()
+
+                        row_count = cur.rowcount
+
+                        for i in range(0, row_count):
+                            value = 100
+
+                            self.progress_bar.setRange(0, value)
+
+                            if value > 50:
+                                self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
+
+                            progress_val = int(((i + 1) / row_count) * 100)
+                            self.progress_bar.setValue(progress_val)
 
                     elif (x == QMessageBox.No):
                         pass
