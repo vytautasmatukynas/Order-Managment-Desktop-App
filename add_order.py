@@ -280,7 +280,7 @@ class Addorders(QDialog):
         self.hbox.addWidget(self.calBtn)
         self.calendarWindow.setLayout(self.hbox)
         self.calendarWindow.setGeometry(780, 280, 350, 350)
-        self.calendarWindow.setWindowTitle('ORDER TERM')
+        self.calendarWindow.setWindowTitle('TERMINAS')
         self.calendarWindow.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
         style_gray.QCalendarstyle(self)
         self.calendarWindow.show()
@@ -326,37 +326,37 @@ class Addorders(QDialog):
         terminas_date = ""
 
         if term != terminas_date:
-            try:
-                conn = psycopg2.connect(
-                    **params
-                )
+            # try:
+            conn = psycopg2.connect(
+                **params
+            )
 
-                cur = conn.cursor()
+            cur = conn.cursor()
 
-                cur.execute('''INSERT INTO orders (company, client, phone_number, order_name,
-                    order_term, status, comments, order_folder, order_file, update_date,
-                    filename, photo, filetype, filedir) VALUES
-                    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
-                            (company, client, phone, name,
-                             term, status, comments, folder, file, update_date1,
-                             filename, byteaPhoto, listfiletype, listentry))
+            cur.execute('''INSERT INTO orders (company, client, phone_number, order_name,
+                order_term, status, comments, order_folder, order_file, update_date,
+                filename, photo, filetype, filedir) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
+                        (company, client, phone, name,
+                         term, status, comments, folder, file, update_date1,
+                         filename, byteaPhoto, listfiletype, listentry))
 
-                conn.commit()
+            conn.commit()
 
-                conn.close()
+            conn.close()
 
 
-            except (Exception, psycopg2.Error) as error:
-                print("Error while fetching data from PostgreSQL", error)
-                msg = QMessageBox()
-                msg.setWindowTitle("ERROR...")
-                msg.setText(f"Error while fetching data from PostgreSQL: {error}")
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-            
-                style_gray.msgsheetstyle(msg)
-            
-                x = msg.exec_()
+            # except (Exception, psycopg2.Error) as error:
+            #     print("Error while fetching data from PostgreSQL", error)
+            #     msg = QMessageBox()
+            #     msg.setWindowTitle("ERROR...")
+            #     msg.setText(f"Error while fetching data from PostgreSQL: {error}")
+            #     msg.setIcon(QMessageBox.Warning)
+            #     msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
+            #
+            #     style_gray.msgsheetstyle(msg)
+            #
+            #     x = msg.exec_()
 
         else:
             msg = QMessageBox()
