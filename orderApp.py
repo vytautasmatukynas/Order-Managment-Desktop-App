@@ -79,7 +79,7 @@ class MainMenu(QMainWindow):
         style_gray.SheetStyle(self)
         self.menubar()
         self.searchWidgets()
-        self.treeTableItems()
+        self.treeTableWidget()
         self.toolBarInside()
         self.tableWidgets()
         self.timeWidget()
@@ -292,6 +292,8 @@ class MainMenu(QMainWindow):
         # ORDER TABLE
         self.emptyTable = QTableWidget()
         self.emptyTable.setColumnCount(0)
+        if self.emptyTable:
+            self.treeTableItems()
 
         self.ordersTable = QTableWidget()
         self.ordersTable.setColumnCount(11)
@@ -353,7 +355,7 @@ class MainMenu(QMainWindow):
         self.searchEntry2.setPlaceholderText('Select table items...')
         self.searchEntry2.textChanged.connect(self.searchTables2)
 
-    def treeTableItems(self):
+    def treeTableWidget(self):
         """Treeview table"""
         self.treeTable = QTreeWidget()
         self.treeTable.setAnimated(True)
@@ -361,6 +363,7 @@ class MainMenu(QMainWindow):
         self.treeTable.setColumnCount(1)
         self.treeTable.setFixedWidth(150)
 
+    def treeTableItems(self):
         con = psycopg2.connect(
             **params
         )
@@ -381,8 +384,8 @@ class MainMenu(QMainWindow):
         self.headers = list(self.clean_get_header)
         self.headers.sort()
 
-        self.ordersSelect1 = self.headers
-        for item in self.ordersSelect1:
+        self.ordersSelect_child = self.headers
+        for item in self.ordersSelect_child:
             self.ordersSelect.addChild(QTreeWidgetItem([item]))
 
         self.treeTable.clicked.connect(self.listTables)
@@ -542,6 +545,89 @@ class MainMenu(QMainWindow):
 
             action = contextMenu.exec_(self.mapToGlobal(event.pos()))
 
+    def display_table(self):
+        # Get current date
+        if datetime.day() <= 9 and datetime.month() <= 9:
+            date = ("{0}-0{1}-0{2}".format(year, month, day))
+        elif datetime.day() <= 9 and datetime.month() >= 10:
+            date = ("{0}-{1}-0{2}".format(year, month, day))
+        elif datetime.day() >= 9 and datetime.month() <= 9:
+            date = ("{0}-0{1}-{2}".format(year, month, day))
+        else:
+            date = ("{0}-{1}-{2}".format(year, month, day))
+
+        # Cleans table
+        self.ordersTable.setFont(QFont("Times", 10))
+
+        for i in reversed(range(self.ordersTable.rowCount())):
+            self.ordersTable.removeRow(i)
+
+        # Connect to SQL table
+        con = psycopg2.connect(
+            **params
+        )
+
+        cur = con.cursor()
+
+        cur.execute(
+            """SELECT id, company, client, phone_number, order_name,
+            order_term, status, comments, order_folder, order_file, update_date,
+            filename, filetype, filedir FROM orders 
+            ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
+        query = cur.fetchall()
+
+        # Sort table values and adds to table, change color of some values
+        for row_date in query:
+            row_number = self.ordersTable.rowCount()
+            self.ordersTable.insertRow(row_number)
+            for column_number, data in enumerate(row_date):
+                setitem = QTableWidgetItem(str(data))
+
+                # print(row_number, column_number, data)
+
+                # check current date and table entry, if nor equal or bigger make it red
+                listdata = []
+                if column_number == 5:
+                    listdata.append(str(data))
+                    if listdata[0] == "+" or listdata[0] == "-":
+                        listdata.pop()
+                for i in listdata:
+                    if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
+                        None
+                    elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
+                            or int(i[0:4]) < int(date[0:4]):
+                        setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
+                        # setitem.setForeground(QtGui.QColor(255, 255, 255))
+
+                # list of names and list of colours to name
+                list_names = ['FINISHED', 'IN PROCESS']
+                list_colors = [(0, 204, 0, 110), (240, 248, 255)]
+                for count_num in range(0, len(list_names)):
+                    while count_num < len(list_names):
+                        if data == list_names[count_num]:
+                            setitem.setBackground(QtGui.QColor(*list_colors[count_num]))
+                        count_num += 1
+
+                self.ordersTable.setItem(row_number, column_number, setitem)
+
+        # Edit column cell disable
+        self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        row_count = cur.rowcount
+
+        for i in range(0, row_count):
+            value = 100
+
+            self.progress_bar.setRange(0, value)
+
+            if value > 50:
+                self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
+
+            progress_val = int(((i + 1) / row_count) * 100)
+            self.progress_bar.setValue(progress_val)
+
+        con.close()
+
     def listTables(self):
         """sort"""
         # Get current date
@@ -557,77 +643,7 @@ class MainMenu(QMainWindow):
         try:
             if self.treeTable.currentItem() == self.ordersSelect:
                 self.tableRightLayout.setCurrentIndex(0)
-                # Cleans table
-                self.ordersTable.setFont(QFont("Times", 10))
-
-                for i in reversed(range(self.ordersTable.rowCount())):
-                    self.ordersTable.removeRow(i)
-
-                # Connect to SQL table
-                con = psycopg2.connect(
-                    **params
-                )
-
-                cur = con.cursor()
-
-                cur.execute(
-                    """SELECT id, company, client, phone_number, order_name,
-                    order_term, status, comments, order_folder, order_file, update_date,
-                    filename, filetype, filedir FROM orders 
-                    ORDER BY status ASC, order_term ASC, order_name ASC, client ASC""")
-                query = cur.fetchall()
-
-                # Sort table values and adds to table, change color of some values
-                for row_date in query:
-                    row_number = self.ordersTable.rowCount()
-                    self.ordersTable.insertRow(row_number)
-                    for column_number, data in enumerate(row_date):
-                        setitem = QTableWidgetItem(str(data))
-
-                        # print(row_number, column_number, data)
-
-                        # check current date and table entry, if nor equal or bigger make it red
-                        listdata = []
-                        if column_number == 5:
-                            listdata.append(str(data))
-                            if listdata[0] == "+" or listdata[0] == "-":
-                                listdata.pop()
-                        for i in listdata:
-                            if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
-                                None
-                            elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
-                                    or int(i[0:4]) < int(date[0:4]):
-                                setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
-                                # setitem.setForeground(QtGui.QColor(255, 255, 255))
-
-                        # list of names and list of colours to name
-                        list_names = ['FINISHED', 'IN PROCESS']
-                        list_colors = [(0, 204, 0, 110), (240, 248, 255)]
-                        for count_num in range(0, len(list_names)):
-                            while count_num < len(list_names):
-                                if data == list_names[count_num]:
-                                    setitem.setBackground(QtGui.QColor(*list_colors[count_num]))
-                                count_num += 1
-
-                        self.ordersTable.setItem(row_number, column_number, setitem)
-
-                # Edit column cell disable
-                self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
-                row_count = cur.rowcount
-
-                for i in range(0, row_count):
-                    value = 100
-
-                    self.progress_bar.setRange(0, value)
-
-                    if value > 50:
-                        self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
-
-                    progress_val = int(((i + 1) / row_count) * 100)
-                    self.progress_bar.setValue(progress_val)
-
-                con.close()
+                self.display_table()
 
             else:
                 con = psycopg2.connect(
@@ -724,6 +740,11 @@ class MainMenu(QMainWindow):
 
             x = msg.exec_()
 
+    def refresh_tree_pavaros_items(self):
+        self.treeTable.clear()
+        self.treeTableItems()
+        self.treeTable.setCurrentItem(self.ordersSelect)
+
     def add_combo(self):
         self.edit_combobox = add_combo.AddCombo()
         self.edit_combobox.exec_()
@@ -733,7 +754,9 @@ class MainMenu(QMainWindow):
             self.neworders = add_order.Addorders()
             # Refresh table after executing QDialog .exec_
             self.neworders.exec_()
-            self.listTables()
+            self.display_table()
+            self.refresh_tree_pavaros_items()
+
         except:
             pass
 
@@ -745,7 +768,8 @@ class MainMenu(QMainWindow):
             self.display = orderUpdate()
             self.display.show()
             self.display.exec_()
-            self.listTables()
+            self.display_table()
+            self.refresh_tree_pavaros_items()
 
         except:
             pass
@@ -916,7 +940,7 @@ class MainMenu(QMainWindow):
                         conn.commit()
                         conn.close()
 
-                        self.listTables()
+                        self.display_table()
 
                         row_count = cur.rowcount
 
@@ -930,6 +954,8 @@ class MainMenu(QMainWindow):
 
                             progress_val = int(((i + 1) / row_count) * 100)
                             self.progress_bar.setValue(progress_val)
+
+                        self.refresh_tree_pavaros_items()
 
                     elif (x == QMessageBox.No):
                         pass
