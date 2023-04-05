@@ -317,7 +317,7 @@ class MainMenu(QMainWindow):
         self.ordersTable.horizontalHeader().setSectionResizeMode(7, QHeaderView.Stretch)
         self.ordersTable.setSelectionBehavior(QAbstractItemView.SelectRows)
 
-        self.ordersTable.clicked.connect(self.uzsakymai_select)
+        self.ordersTable.pressed.connect(self.uzsakymai_select)
         self.ordersTable.doubleClicked.connect(self.updateorders)
 
         # Align delegate Class
