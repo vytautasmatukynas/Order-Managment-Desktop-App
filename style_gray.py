@@ -50,6 +50,11 @@ def SheetStyle(self):
                             border-bottom:1px solid black;
                             border-left:1px solid black;
                             }
+                            
+                            QTreeView::corner {
+                            background-color: dimgray;
+                            }
+                            
 
                             QTableWidget{
                             background: 252, 252, 252;
@@ -65,6 +70,10 @@ def SheetStyle(self):
                             QTableWidget::item:selected{
                             background:slategray;
                             color:white;
+                            }
+                            
+                            QTableWidget::corner {
+                            background-color: dimgray;
                             }
 
                             QHeaderView{
