@@ -361,7 +361,10 @@ class MainMenu(QMainWindow):
         self.treeTable.setAnimated(True)
         self.treeTable.setHeaderHidden(True)
         self.treeTable.setColumnCount(1)
-        self.treeTable.setFixedWidth(150)
+        self.treeTable.setMaximumWidth(200)
+        self.treeTable.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.treeTable.header().setStretchLastSection(False)
+        self.treeTable.header().setSectionResizeMode(QHeaderView.ResizeToContents)
 
     def treeTableItems(self):
         con = psycopg2.connect(
