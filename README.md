@@ -10,7 +10,7 @@ App shows when orders are late, you can attach order files .xlm .pdf .jpg .png, 
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/231741917-db48320e-6a9f-4437-8eb9-40b617e9d0cd.png)
 
-Double click on row and "Update" window dialog:
+Double click on row to show "Update" window dialog:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/231742012-bdd2e7bf-7ebf-4cc7-9844-fe360172edc9.png)
 
