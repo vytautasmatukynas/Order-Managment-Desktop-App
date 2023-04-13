@@ -16,13 +16,13 @@ Double click on row and "Update" window dialog:
 
 There is dialog window in menu-bar "Settings" section where you can add new combo-box items:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224937444-2698bde3-70b4-4ff5-8610-22b7b9fd3528.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231742385-d35de624-2f36-4fce-a607-c51590728d4d.png)
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224935028-eb23862e-3696-48c1-b8a6-660cc9c0dd14.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231742520-682d21f9-5712-4fe2-bc53-bb53301e0a59.png)
 
 There is tree-table to sort items by ORDER_NAME:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/226143554-d1a70378-1658-454c-9ad3-2a51d0766e12.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231742642-c4a02372-14d5-45d5-93fd-898815ba6b74.png)
 
 There is search - first search line sorts items, second search line select items in table:
 
@@ -38,7 +38,7 @@ Export your table to .pdf .xls .csv:
 
 Print table:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224936879-80a42c27-2c6d-4203-be02-a263d9101908.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231742835-20b6c58e-8777-48df-b92d-dbbffcca81b4.png)
 
 
 
