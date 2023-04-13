@@ -26,9 +26,9 @@ There is tree-table to sort items by ORDER_NAME:
 
 There is search - first search line sorts items, second search line select items in table:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224935303-c8f94a3e-2f54-4a9a-965d-3f93f68d824b.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231743271-f8b04043-e7cd-4840-a4fe-5f77dd114fcd.png)
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224935406-15e3100a-564e-4c00-8c50-6032f889da1a.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231743510-c5d15f80-9360-40cd-a36d-cc641dcd4f2e.png)
 
 Export your table to .pdf .xls .csv:
 
