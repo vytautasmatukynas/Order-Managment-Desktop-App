@@ -32,9 +32,13 @@ There is search - first search line sorts items, second search line select items
 
 Export your table to .pdf .xls .csv:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224936731-190de9fa-2636-4509-b9bc-24e881166b0c.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231743769-c00ca6dd-fcde-467e-9959-e5e79c57c5a3.png)
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/224936097-8a496102-55db-4dd1-8347-af269b831e58.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/231743875-d0acfdc3-33f0-4f0a-8e80-61a32c9c7d8e.png)
+
+![paveikslas](https://user-images.githubusercontent.com/51360361/231743975-5fe7e45b-3f06-4a0f-baac-bf4b3d700084.png)
+
+![paveikslas](https://user-images.githubusercontent.com/51360361/231744077-fdb7b2f7-f181-4e9a-bca2-3deb1c79981c.png)
 
 Print table:
 
