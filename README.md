@@ -1,7 +1,7 @@
 # Order-Managment-Dektop-App
 python/pyqt5/postgreSQL
 
-Simple order managment dekstop app (Demo version), where you can store your orders.
+Simple order managment dekstop app (demo version), where you can store your orders.
 App shows when orders are late, you can attach order files .xlm .pdf .jpg .png, add link to order docs folder, new/update/delete/open functions, print table, search table, check for updates and info (request link and compare version number in link to '__version__' in .py, if version is higher than app version, then download new app setup from googledrive link). There is 'create_db_table.py' that creates postgreSQL table for this app. 'style_gray.py' contains all style applied to this app.
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/231741651-509e7e5d-fbee-4385-bbf8-80108608984b.png)
