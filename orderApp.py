@@ -317,7 +317,7 @@ class MainMenu(QMainWindow):
         self.ordersTable.horizontalHeader().setSectionResizeMode(7, QHeaderView.Stretch)
         self.ordersTable.setSelectionBehavior(QAbstractItemView.SelectRows)
 
-        self.ordersTable.pressed.connect(self.uzsakymai_select)
+        self.ordersTable.pressed.connect(self.order_select)
         self.ordersTable.doubleClicked.connect(self.updateorders)
 
         # Align delegate Class
@@ -507,7 +507,7 @@ class MainMenu(QMainWindow):
         self.central_widget.setLayout(self.mainLayout)
         self.setCentralWidget(self.central_widget)
 
-    def uzsakymai_select(self):
+    def order_select(self):
         global ordersId
 
         self.listorders = []
@@ -1706,6 +1706,7 @@ class orderUpdate(QDialog):
 
     def cancelorders(self):
         self.close()
+
 
 
 def main():
