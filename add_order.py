@@ -1,3 +1,4 @@
+import ctypes
 from pathlib import Path
 
 import psycopg2
@@ -6,8 +7,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-import style_gray
 import config
+import style_gray
 
 params = config.sql_db
 
@@ -29,6 +30,18 @@ year = datetime.year()
 month = datetime.month()
 day = datetime.day()
 
+# get windows scale ratio
+user32 = ctypes.windll.user32
+user32.SetProcessDPIAware()
+
+scale_factor = user32.GetDpiForSystem() / 96.0
+# print("Scale factor:", scale_factor)
+
+# change widget size to scale ratio
+TEXT_PT = int(12 * scale_factor)
+BUTTON_HEIGHT = int(25 * scale_factor)
+ENTRY_COMBO_HEIGHT = int(25 * scale_factor)
+
 
 class Addorders(QDialog):
     """add new record class"""
@@ -36,9 +49,11 @@ class Addorders(QDialog):
     def __init__(self):
         """mainWindow"""
         super().__init__()
+
         self.setWindowTitle("NEW")
         self.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        self.setGeometry(400, 300, 1000, 431)
+        self.setGeometry(int(400 / scale_factor), int(300 / scale_factor),
+                         int(1000 * scale_factor), int(432 * scale_factor))
         self.setFixedSize(self.size())
 
         # self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -59,6 +74,7 @@ class Addorders(QDialog):
             pass
 
     def closeEvent(self, event):
+        self.settings.setValue('scale_aware', True)
         self.settings.setValue('window size', self.size())
         self.settings.setValue('window position', self.pos())
 
@@ -152,7 +168,7 @@ class Addorders(QDialog):
         self.locEntry.setFont(QFont("Times", 12))
 
         self.folderBtn = QPushButton("ADD LINK TO FOLDER")
-        self.folderBtn.setFixedHeight(25)
+        self.folderBtn.setFixedHeight(BUTTON_HEIGHT)
         self.folderBtn.clicked.connect(self.OpenFolderDialog)
         self.folderBtn.setFont(QFont("Times", 10))
 
@@ -164,25 +180,24 @@ class Addorders(QDialog):
         self.ListEntry.setFont(QFont("Times", 12))
 
         self.fileBtn = QPushButton("ADD FILE")
-        self.fileBtn.setFixedHeight(25)
+        self.fileBtn.setFixedHeight(BUTTON_HEIGHT)
         self.fileBtn.clicked.connect(self.getFileInfo)
         self.fileBtn.setFont(QFont("Times", 10))
 
         self.dateBtn = QPushButton("ADD DATE")
-        self.dateBtn.setFixedWidth(110)
-        self.dateBtn.setFixedHeight(25)
+        self.dateBtn.setFixedWidth(int(110 * scale_factor))
+        self.dateBtn.setFixedHeight(BUTTON_HEIGHT)
         self.dateBtn.clicked.connect(self.terminasCalendar)
         self.dateBtn.setFont(QFont("Times", 10))
 
-
         self.okBtn = QPushButton("OK")
-        self.okBtn.setFixedHeight(25)
+        self.okBtn.setFixedHeight(BUTTON_HEIGHT)
         self.okBtn.clicked.connect(self.addorders)
         self.okBtn.setFont(QFont("Times", 10))
         # self.okBtn.setMaximumWidth(200)
 
         self.cancelBtn = QPushButton("CANCEL")
-        self.cancelBtn.setFixedHeight(25)
+        self.cancelBtn.setFixedHeight(BUTTON_HEIGHT)
         self.cancelBtn.clicked.connect(self.cancelordersAdd)
         self.cancelBtn.setFont(QFont("Times", 10))
         # self.cancelBtn.setMaximumWidth(200)
@@ -203,6 +218,8 @@ class Addorders(QDialog):
         self.widgetLayout2 = QFormLayout()
         self.widgetFrame = QFrame()
         self.widgetFrame2 = QFrame()
+        self.widgetFrame.setFont(QFont("Times", 12))
+        self.widgetFrame2.setFont(QFont("Times", 12))
 
         # self.qhbox1 = QHBoxLayout()
         # self.qhbox1.addWidget(self.locEntry)
@@ -284,7 +301,7 @@ class Addorders(QDialog):
         self.cal.setGridVisible(True)
         self.calBtn = QPushButton("CANCEL")
         self.calBtn.setFont(QFont("Times", 10))
-        self.calBtn.setFixedHeight(25)
+        self.calBtn.setFixedHeight(BUTTON_HEIGHT)
         self.calBtn.clicked.connect(self.cal_cancel)
 
         self.calendarWindow = QDialog()
@@ -292,7 +309,8 @@ class Addorders(QDialog):
         self.hbox.addWidget(self.cal)
         self.hbox.addWidget(self.calBtn)
         self.calendarWindow.setLayout(self.hbox)
-        self.calendarWindow.setGeometry(780, 280, 350, 350)
+        self.calendarWindow.setGeometry(int(780 / scale_factor), int(280 / scale_factor),
+                                        int(350 * scale_factor), int(350 * scale_factor))
         self.calendarWindow.setWindowTitle('TERMINAS')
         self.calendarWindow.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
         style_gray.QCalendarstyle(self)
@@ -358,7 +376,6 @@ class Addorders(QDialog):
 
             conn.close()
 
-
             # except (Exception, psycopg2.Error) as error:
             #     print("Error while fetching data from PostgreSQL", error)
             #     msg = QMessageBox()
@@ -386,3 +403,17 @@ class Addorders(QDialog):
 
     def cancelordersAdd(self):
         self.close()
+
+
+def main():
+    import sys
+
+    App = QApplication(sys.argv)
+
+    window = Addorders()
+
+    sys.exit(App.exec_())
+
+
+if __name__ == '__main__':
+    main()

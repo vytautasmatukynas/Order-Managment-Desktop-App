@@ -232,35 +232,6 @@ def msgsheetstyle(msg):
                             color:white;
                             border:1px solid black;
                             padding:3px;
-                            min-Width:40px;
-                            }
-
-                            QPushButton::hover{
-                            background-color:steelblue;
-                            color:white;
-                            border:1px solid black;
-                            }
-
-                            QPushButton::pressed{
-                            background-color:black;
-                            color:white;
-                            }
-
-                            """)
-#
-#
-def mboxsheetstyle(mbox):
-    mbox.setStyleSheet("""QMessageBox{
-                            background-color:lightgrey;
-                            }
-
-
-
-                            QPushButton{
-                            background-color:dimgray;
-                            color:white;
-                            border:1px solid black;
-                            padding:3px;
                             min-Width:60px;
                             }
 
@@ -276,6 +247,39 @@ def mboxsheetstyle(mbox):
                             }
 
                             """)
+
+
+#
+#
+def mboxsheetstyle(mbox):
+    mbox.setStyleSheet("""QMessageBox{
+                            background-color:lightgrey;
+                            }
+
+
+
+                            QPushButton{
+                            background-color:dimgray;
+                            color:white;
+                            border:1px solid black;
+                            padding:3px;
+                            min-Width:110px;
+                            }
+
+                            QPushButton::hover{
+                            background-color:steelblue;
+                            color:white;
+                            border:1px solid black;
+                            }
+
+                            QPushButton::pressed{
+                            background-color:black;
+                            color:white;
+                            }
+
+                            """)
+
+
 #
 def QDialogsheetstyle(self):
     self.setStyleSheet("""QDialog{
@@ -294,10 +298,6 @@ def QDialogsheetstyle(self):
                             bottom: 10px;
                             subcontrol-position: top;
                             }
-                            
-                            QLabel{
-                            font-size: 12pt;
-                            }
 
                             QPushButton{
                             background-color:dimgray;
@@ -317,6 +317,7 @@ def QDialogsheetstyle(self):
                             }
                             
                             """)
+
 
 def QCalendarstyle(self):
     self.calendarWindow.setStyleSheet("""QPushButton{

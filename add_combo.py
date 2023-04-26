@@ -1,12 +1,12 @@
+import ctypes
+
 import psycopg2
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from configparser import ConfigParser
-
-import style_gray
 
 import config
+import style_gray
 
 params = config.sql_db
 
@@ -23,6 +23,18 @@ params = config.sql_db
 #     raise Exception(
 #         'Section {0} not found in the {1} file'.format('postgreDB', 'config.ini'))
 
+# get windows scale ratio
+user32 = ctypes.windll.user32
+user32.SetProcessDPIAware()
+
+scale_factor = user32.GetDpiForSystem() / 96.0
+# print("Scale factor:", scale_factor)
+
+# change widget size to scale ratio
+TEXT_PT = int(12 * scale_factor)
+BUTTON_HEIGHT = int(25 * scale_factor)
+ENTRY_COMBO_HEIGHT = int(25 * scale_factor)
+
 
 class AddCombo(QDialog):
     def __init__(self):
@@ -30,7 +42,8 @@ class AddCombo(QDialog):
         super().__init__()
         self.setWindowTitle('ADD ComboBox ITEMS')
         self.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        self.setGeometry(400, 300, 400, 280)
+        self.setGeometry(int(400 / scale_factor), int(300 / scale_factor),
+                         int(400 * scale_factor), int(280 * scale_factor))
         self.setFixedSize(self.size())
 
         # self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -57,29 +70,32 @@ class AddCombo(QDialog):
         self.layouts()
 
     def widgets(self):
-
-        # uzsakymai ########################
+        # ORDERS
         self.companyE = QLineEdit()
         self.companyE.setFont(QFont("Times", 12))
+        self.companyE.setFixedHeight(ENTRY_COMBO_HEIGHT)
 
         self.clientE = QLineEdit()
         self.clientE.setFont(QFont("Times", 12))
+        self.clientE.setFixedHeight(ENTRY_COMBO_HEIGHT)
 
         self.phoneE = QLineEdit()
         self.phoneE.setFont(QFont("Times", 12))
+        self.phoneE.setFixedHeight(ENTRY_COMBO_HEIGHT)
 
         self.nameE = QLineEdit()
         self.nameE.setFont(QFont("Times", 12))
+        self.nameE.setFixedHeight(ENTRY_COMBO_HEIGHT)
 
         self.okBtn = QPushButton("UPDATE")
         self.okBtn.clicked.connect(self.addCombo)
         self.okBtn.setFont(QFont("Times", 10))
-        self.okBtn.setFixedHeight(25)
+        self.okBtn.setFixedHeight(BUTTON_HEIGHT)
 
         self.cancelBtn = QPushButton("CLOSE")
         self.cancelBtn.clicked.connect(self.closeAddCombo)
         self.cancelBtn.setFont(QFont("Times", 10))
-        self.cancelBtn.setFixedHeight(25)
+        self.cancelBtn.setFixedHeight(BUTTON_HEIGHT)
 
     def layouts(self):
         self.mainLayout = QGridLayout()
@@ -150,3 +166,17 @@ class AddCombo(QDialog):
 
     def closeAddCombo(self):
         self.close()
+
+
+def main():
+    import sys
+
+    App = QApplication(sys.argv)
+
+    window = AddCombo()
+
+    sys.exit(App.exec_())
+
+
+if __name__ == '__main__':
+    main()
