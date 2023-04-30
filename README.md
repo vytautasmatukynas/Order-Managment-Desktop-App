@@ -18,8 +18,6 @@ Double click on row to show "Update" window dialog:
 
 There is dialog window in menu-bar "Settings" section where you can add new combo-box items:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/235355451-7e73d31d-69b6-4bf2-a4eb-83f0ab79cfcb.png)
-
 ![paveikslas](https://user-images.githubusercontent.com/51360361/235355405-37229592-dd3b-4dca-96fd-f3c1164f2342.png)
 
 There is tree-table to sort items by ORDER_NAME:
@@ -34,17 +32,11 @@ There is search - first search line sorts items and only shows what you are sear
 
 Export your table to .pdf .xls .csv:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/231743769-c00ca6dd-fcde-467e-9959-e5e79c57c5a3.png)
-
-![paveikslas](https://user-images.githubusercontent.com/51360361/231743875-d0acfdc3-33f0-4f0a-8e80-61a32c9c7d8e.png)
-
-![paveikslas](https://user-images.githubusercontent.com/51360361/231743975-5fe7e45b-3f06-4a0f-baac-bf4b3d700084.png)
-
-![paveikslas](https://user-images.githubusercontent.com/51360361/231744077-fdb7b2f7-f181-4e9a-bca2-3deb1c79981c.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/235355715-668f6e4c-00e8-4857-8d1d-6632d59be91d.png)
 
 Print table:
 
-![paveikslas](https://user-images.githubusercontent.com/51360361/231742835-20b6c58e-8777-48df-b92d-dbbffcca81b4.png)
+![paveikslas](https://user-images.githubusercontent.com/51360361/235355729-6c4ca086-d8cc-41ca-8882-413ea7bc4048.png)
 
 
 
