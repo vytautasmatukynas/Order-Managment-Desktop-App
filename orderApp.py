@@ -54,7 +54,8 @@ LINK_TO_FILE = "link to setup file"
 
 # get windows scale ratio
 user32 = ctypes.windll.user32
-user32.SetProcessDPIAware()
+# SAME AS CHANGING ON python.exe DPI aware Application ---->>> ctypes.windll.shcore.SetProcessDpiAwareness(1)
+user32.SetProcessDPIAware(1)
 
 scale_factor = user32.GetDpiForSystem() / 96.0
 # print("Scale factor:", scale_factor)
@@ -90,6 +91,8 @@ class MainMenu(QMainWindow):
                          int(1200 * scale_factor), int(720 * scale_factor))
         self.showMaximized()
 
+        self.option = True
+
         # MainClass functions
         self.show()
         self.UI()
@@ -99,6 +102,7 @@ class MainMenu(QMainWindow):
         style_gray.SheetStyle(self)
         self.menubar()
         self.searchWidgets()
+        self.default_widgets()
         self.treeTableWidget()
         self.toolBarInside()
         self.tableWidgets()
@@ -375,6 +379,7 @@ class MainMenu(QMainWindow):
         self.searchEntry2.setPlaceholderText('Select table items...')
         self.searchEntry2.textChanged.connect(self.searchTables2)
 
+
     def treeTableWidget(self):
         """Treeview table"""
         self.treeTable = QTreeWidget()
@@ -383,8 +388,9 @@ class MainMenu(QMainWindow):
         self.treeTable.setColumnCount(1)
         self.treeTable.setMaximumWidth(TREE_TABLE_WIDTH)
         self.treeTable.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.treeTable.header().setStretchLastSection(False)
-        self.treeTable.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+        # self.treeTable.header().setStretchLastSection(False)
+        # self.treeTable.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+
 
     def treeTableItems(self):
         con = psycopg2.connect(
@@ -454,6 +460,14 @@ class MainMenu(QMainWindow):
 
         self.showTime()
 
+    def default_widgets(self):
+        self.expand_button = QPushButton()
+        self.expand_button.setIcon(QIcon("icons/to_left.png"))
+        self.expand_button.setIconSize(QSize(int(19*scale_factor), int(19*scale_factor)))
+        self.expand_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.expand_button.setFixedWidth(int(20*scale_factor))
+        self.expand_button.clicked.connect(self.treeTableHideShow)
+
     def showTime(self):
         self.currentTime = QTime.currentTime()
         self.displayTxt = self.currentTime.toString('hh:mm:ss')
@@ -516,6 +530,7 @@ class MainMenu(QMainWindow):
 
         # Main layout
         self.middleLayout.addLayout(self.treeLeftLayout)
+        self.middleLayout.addWidget(self.expand_button)
         self.middleLayout.addLayout(self.mainRightLayout)
 
         self.mainLayout.addLayout(self.searchLayout, 1)
@@ -526,6 +541,19 @@ class MainMenu(QMainWindow):
         self.central_widget = QWidget()
         self.central_widget.setLayout(self.mainLayout)
         self.setCentralWidget(self.central_widget)
+
+    def treeTableHideShow(self):
+        if self.option:
+            self.treeTable.hide()
+            self.expand_button.setIcon(QIcon("icons/to_right.png"))
+
+            self.option = False
+
+        else:
+            self.treeTable.show()
+            self.expand_button.setIcon(QIcon("icons/to_left.png"))
+
+            self.option = True
 
     def order_select(self):
         global ordersId
@@ -1740,7 +1768,9 @@ class orderUpdate(QDialog):
 
 
 def main():
+    # os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     App = QApplication(sys.argv)
+    # App.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
     window = MainMenu()
 
