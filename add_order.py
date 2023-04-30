@@ -313,7 +313,7 @@ class Addorders(QDialog):
                                         int(350 * scale_factor), int(350 * scale_factor))
         self.calendarWindow.setWindowTitle('TERMINAS')
         self.calendarWindow.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        style_gray.QCalendarstyle(self)
+        style_retro.QCalendarstyle(self)
         self.calendarWindow.show()
 
         # @QtCore.pyqtSlot(QtCore.QDate)
@@ -384,7 +384,7 @@ class Addorders(QDialog):
             #     msg.setIcon(QMessageBox.Warning)
             #     msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
             #
-            #     style_gray.msgsheetstyle(msg)
+            #     style_retro.msgsheetstyle(msg)
             #
             #     x = msg.exec_()
 
@@ -395,7 +395,7 @@ class Addorders(QDialog):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 

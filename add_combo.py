@@ -149,7 +149,7 @@ class AddCombo(QDialog):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -160,7 +160,7 @@ class AddCombo(QDialog):
             msg.setIcon(QMessageBox.Information)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
