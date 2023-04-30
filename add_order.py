@@ -8,7 +8,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import config
-import style_gray
+import style_retro
 
 params = config.sql_db
 
@@ -63,7 +63,7 @@ class Addorders(QDialog):
 
         self.show()
 
-        style_gray.QDialogsheetstyle(self)
+        style_retro.QDialogsheetstyle(self)
 
         self.settings = QSettings('Order App', 'Add1')
         # print(self.settings.fileName())

@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import *
 import add_combo
 import add_order
 import config
-import style_gray
+import style_retro
 
 params = config.sql_db
 
@@ -99,7 +99,7 @@ class MainMenu(QMainWindow):
 
     def UI(self):
         """Function that starts at start"""
-        style_gray.SheetStyle(self)
+        style_retro.SheetStyle(self)
         self.menubar()
         self.searchWidgets()
         self.default_widgets()
@@ -125,7 +125,7 @@ class MainMenu(QMainWindow):
         file.addAction(new)
 
         file.addSeparator()
-        save = QAction("save", self)
+        save = QAction("Save", self)
         save.triggered.connect(self.save)
         save.setShortcut("Ctrl+S")
         save.setIcon(QIcon("icons/save.png"))
@@ -167,7 +167,7 @@ class MainMenu(QMainWindow):
 
         Group = QActionGroup(Style)
 
-        style2 = QAction("Gandalf the Grey", self)
+        style2 = QAction("Blue_Style", self)
         style2.setCheckable(True)
         style2.setChecked(True)
         Style.addAction(style2)
@@ -180,7 +180,7 @@ class MainMenu(QMainWindow):
 
         Settings.addSeparator()
 
-        combo_box = QAction("Edit ComboBox", self)
+        combo_box = QAction("Add Combo_Box Items", self)
         combo_box.triggered.connect(self.add_combo)
         Settings.addAction(combo_box)
 
@@ -214,7 +214,7 @@ class MainMenu(QMainWindow):
                 msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
                 msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
 
-                style_gray.msgsheetstyle(msg)
+                style_retro.msgsheetstyle(msg)
 
                 x = msg.exec_()
 
@@ -239,7 +239,7 @@ class MainMenu(QMainWindow):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -257,7 +257,7 @@ class MainMenu(QMainWindow):
                 msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
                 msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
 
-                style_gray.msgsheetstyle(msg)
+                style_retro.msgsheetstyle(msg)
 
                 x = msg.exec_()
 
@@ -277,7 +277,7 @@ class MainMenu(QMainWindow):
                 msg.setIcon(QMessageBox.Information)
                 msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-                style_gray.msgsheetstyle(msg)
+                style_retro.msgsheetstyle(msg)
 
                 x = msg.exec_()
 
@@ -289,7 +289,7 @@ class MainMenu(QMainWindow):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -298,16 +298,13 @@ class MainMenu(QMainWindow):
         #                                        "burn the haystack.")
         msg = QMessageBox()
         msg.setWindowTitle("ABOUT")
-        msg.setText("If you want to find a needle in a haystack,\n"
-                    "burn the haystack.\n"
-                    "\n"
-                    "Order App version {} ({})\n"
+        msg.setText("Order App version {} ({})\n"
                     "\n"
                     "{}".format(__version__, __status__, __copyright__))
         msg.setIcon(QMessageBox.Information)
         msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-        style_gray.msgsheetstyle(msg)
+        style_retro.msgsheetstyle(msg)
 
         x = msg.exec_()
 
@@ -652,7 +649,7 @@ class MainMenu(QMainWindow):
 
                 # list of names and list of colours to name
                 list_names = ['FINISHED', 'IN PROCESS']
-                list_colors = [(0, 204, 0, 110), (240, 248, 255)]
+                list_colors = [(0, 204, 0, 110), (122, 197, 205)]
                 for count_num in range(0, len(list_names)):
                     while count_num < len(list_names):
                         if data == list_names[count_num]:
@@ -750,7 +747,7 @@ class MainMenu(QMainWindow):
 
                                 # list of names and list of colours to name
                                 list_names = ['FINISHED', 'IN PROCESS']
-                                list_colors = [(0, 204, 0, 110), (240, 248, 255)]
+                                list_colors = [(0, 204, 0, 110), (122, 197, 205)]
                                 for count_num in range(0, len(list_names)):
                                     while count_num < len(list_names):
                                         if data == list_names[count_num]:
@@ -786,7 +783,7 @@ class MainMenu(QMainWindow):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -882,7 +879,7 @@ class MainMenu(QMainWindow):
 
                             # list of names and list of colours to name
                             list_names = ['FINISHED', 'IN PROCESS']
-                            list_colors = [(0, 204, 0, 110), (255, 255, 255)]
+                            list_colors = [(0, 204, 0, 110), (122, 197, 205)]
                             for count_num in range(0, len(list_names)):
                                 while count_num < len(list_names):
                                     if data == list_names[count_num]:
@@ -916,7 +913,7 @@ class MainMenu(QMainWindow):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -968,7 +965,7 @@ class MainMenu(QMainWindow):
         mbox.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
         mbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
 
-        style_gray.mboxsheetstyle(mbox)
+        style_retro.mboxsheetstyle(mbox)
 
         x = mbox.exec_()
 
@@ -1018,7 +1015,7 @@ class MainMenu(QMainWindow):
                     msg.setIcon(QMessageBox.Information)
                     msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-                    style_gray.msgsheetstyle(msg)
+                    style_retro.msgsheetstyle(msg)
 
                     x = msg.exec_()
 
@@ -1063,7 +1060,7 @@ class MainMenu(QMainWindow):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -1275,7 +1272,7 @@ class MainMenu(QMainWindow):
                     msg.setIcon(QMessageBox.Information)
                     msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-                    style_gray.msgsheetstyle(msg)
+                    style_retro.msgsheetstyle(msg)
 
                     x = msg.exec_()
 
@@ -1287,7 +1284,7 @@ class MainMenu(QMainWindow):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -1325,7 +1322,7 @@ class MainMenu(QMainWindow):
                 msg.setIcon(QMessageBox.Information)
                 msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-                style_gray.msgsheetstyle(msg)
+                style_retro.msgsheetstyle(msg)
 
                 x = msg.exec_()
 
@@ -1352,7 +1349,7 @@ class MainMenu(QMainWindow):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 
@@ -1374,7 +1371,7 @@ class orderUpdate(QDialog):
 
         # self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 
-        style_gray.QDialogsheetstyle(self)
+        style_retro.QDialogsheetstyle(self)
 
         # creates registry folder and subfolder
         self.settings = QSettings('Order App', 'Update1')
@@ -1629,7 +1626,7 @@ class orderUpdate(QDialog):
                                         int(350 * scale_factor), int(350 * scale_factor))
         self.calendarWindow.setWindowTitle('ORDER TERM')
         self.calendarWindow.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        style_gray.QCalendarstyle(self)
+        style_retro.QCalendarstyle(self)
         self.calendarWindow.show()
 
         # @QtCore.pyqtSlot(QtCore.QDate)
@@ -1745,7 +1742,7 @@ class orderUpdate(QDialog):
                 msg.setIcon(QMessageBox.Information)
                 msg.setWindowIcon(QIcon('icons/icon.ico'))
 
-                style_gray.msgsheetstyle(msg)
+                style_retro.msgsheetstyle(msg)
 
                 x = msg.exec_()
 
@@ -1757,7 +1754,7 @@ class orderUpdate(QDialog):
             msg.setIcon(QMessageBox.Information)
             msg.setWindowIcon(QIcon('icons/icon.ico'))
 
-            style_gray.msgsheetstyle(msg)
+            style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
 

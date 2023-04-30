@@ -6,7 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import config
-import style_gray
+import style_retro
 
 params = config.sql_db
 
@@ -48,7 +48,7 @@ class AddCombo(QDialog):
 
         # self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 
-        style_gray.QDialogsheetstyle(self)
+        style_retro.QDialogsheetstyle(self)
 
         self.settings = QSettings('Order App', 'Combo')
         # print(self.settings.fileName())
