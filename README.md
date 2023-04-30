@@ -1,4 +1,4 @@
-# Order-Managment-Dektop-App
+# Order-Managment-Dektop-App-Demo
 This is just demo_version, so it may lag when it fetches data from SQL and there is some unsolved errors, but app works fine. There will be update with threads to fix that lag problem.
 
 Simple order managment dekstop app (demo version), where you can store your orders.
