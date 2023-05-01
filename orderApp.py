@@ -107,7 +107,6 @@ class MainMenu(QMainWindow):
         self.toolBarInside()
         self.tableWidgets()
         self.timeWidget()
-        self.progressBar()
         self.layouts()
         self.updateInfoOnStart()
 
@@ -167,7 +166,7 @@ class MainMenu(QMainWindow):
 
         Group = QActionGroup(Style)
 
-        style2 = QAction("Blue_Style", self)
+        style2 = QAction("Retro_Style", self)
         style2.setCheckable(True)
         style2.setChecked(True)
         Style.addAction(style2)
@@ -470,11 +469,6 @@ class MainMenu(QMainWindow):
         self.displayTxt = self.currentTime.toString('hh:mm:ss')
         self.Timer.setText(self.displayTxt)
 
-    def progressBar(self):
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setFixedWidth(PROGRESS_WIDTH)
-        self.progress_bar.setAlignment(QtCore.Qt.AlignCenter)
-
     def layouts(self):
         """App layouts"""
         self.mainLayout = QVBoxLayout()
@@ -521,8 +515,7 @@ class MainMenu(QMainWindow):
 
         # Bottom layout
         self.bottomLayout.addWidget(QLabel(f"Order App {__version__} ({__status__})"), 98, alignment=Qt.AlignLeft)
-        self.bottomLayout.addWidget(self.progress_bar, 12, alignment=Qt.AlignLeft)
-        self.bottomLayout.addWidget(QLabel(f"Current date/time: {datetime.toPyDate()}"), 1, alignment=Qt.AlignRight)
+        self.bottomLayout.addWidget(QLabel(f"{datetime.toPyDate()}"), 1, alignment=Qt.AlignRight)
         self.bottomLayout.addWidget(self.Timer, 1, alignment=Qt.AlignRight)
 
         # Main layout
@@ -661,19 +654,6 @@ class MainMenu(QMainWindow):
         # Edit column cell disable
         self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        row_count = cur.rowcount
-
-        for i in range(0, row_count):
-            value = 100
-
-            self.progress_bar.setRange(0, value)
-
-            if value > 50:
-                self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
-
-            progress_val = int(((i + 1) / row_count) * 100)
-            self.progress_bar.setValue(progress_val)
-
         con.close()
 
     def listTables(self):
@@ -757,21 +737,6 @@ class MainMenu(QMainWindow):
                                 self.ordersTable.setItem(row_number, column_number, setitem)
 
                         self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
-                    row_count = cur.rowcount
-
-                    for i in range(0, row_count):
-                        value = 100
-
-                        self.progress_bar.setRange(0, value)
-
-                        if value > 50:
-                            self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
-
-                        progress_val = int(((i + 1) / row_count) * 100)
-                        self.progress_bar.setValue(progress_val)
-
-                    index_number += 1
 
                 con.close()
 
@@ -890,19 +855,6 @@ class MainMenu(QMainWindow):
 
                 self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-                row_count = cur.rowcount
-
-                for i in range(0, row_count):
-                    value = 100
-
-                    self.progress_bar.setRange(0, value)
-
-                    if value > 50:
-                        self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
-
-                    progress_val = int(((i + 1) / row_count) * 100)
-                    self.progress_bar.setValue(progress_val)
-
                 conn.close()
 
         except (Exception, psycopg2.Error) as error:
@@ -988,19 +940,6 @@ class MainMenu(QMainWindow):
                         conn.close()
 
                         self.display_table()
-
-                        row_count = cur.rowcount
-
-                        for i in range(0, row_count):
-                            value = 100
-
-                            self.progress_bar.setRange(0, value)
-
-                            if value > 50:
-                                self.progress_bar.setStyleSheet("QProgressBar {color: white;}")
-
-                            progress_val = int(((i + 1) / row_count) * 100)
-                            self.progress_bar.setValue(progress_val)
 
                         self.refresh_tree_pavaros_items()
 

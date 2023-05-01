@@ -58,7 +58,7 @@ def SheetStyle(self):
                             
 
                             QTableWidget{
-                            background: floralwhite;
+                            background: white;
                             gridline-color:black;
                             border:1px solid black;
                             }
@@ -104,7 +104,7 @@ def SheetStyle(self):
 
 
                             QTreeWidget{
-                            background: floralwhite;
+                            background: white;
                             padding: 3%;
                             }
 
@@ -142,7 +142,7 @@ def SheetStyle(self):
 
 
                             QLineEdit{
-                            background-color:floralwhite;
+                            background-color:white;
                             color:black;
                             border:1px solid black;
                             padding:2px;
