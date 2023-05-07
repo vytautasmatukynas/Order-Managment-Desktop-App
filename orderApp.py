@@ -802,7 +802,7 @@ class MainMenu(QMainWindow):
             if self.treeTable.currentItem() == self.ordersSelect or \
                     self.treeTable.currentItem() == self.ordersSelect.child(0) or \
                     self.treeTable.currentItem() == self.ordersSelect.child(1):
-                a = a1 = a2 = a3 = a4 = self.searchEntry1.text()
+                search_form = self.searchEntry1.text()
 
                 self.ordersTable.setFont(QFont("Times", 10))
                 for i in reversed(range(self.ordersTable.rowCount())):
@@ -814,10 +814,10 @@ class MainMenu(QMainWindow):
 
                 cur = conn.cursor()
 
-                cur.execute(
-                    """SELECT * FROM orders WHERE company ILIKE '%{}%' OR client ILIKE '%{}%' OR 
-                    order_name ILIKE '%{}%' OR phone_number ILIKE '%{}%' OR comments ILIKE '%{}%'""".format
-                    (a, a1, a2, a3, a4))
+                cur.execute(f"""SELECT * FROM orders WHERE
+                    company ILIKE '%{search_form}%' OR client ILIKE '%{search_form}%' 
+                    OR phone_number ILIKE '%{search_form}%' OR order_name ILIKE '%{search_form}%' 
+                    OR comments ILIKE '%{search_form}%'""")
                 query = cur.fetchall()
 
                 for row_date in query:
