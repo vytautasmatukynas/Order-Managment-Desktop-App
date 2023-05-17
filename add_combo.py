@@ -25,7 +25,7 @@ params = config.sql_db
 #         'Section {0} not found in the {1} file'.format('postgreDB', 'config.ini'))
 
 
-class AddCombo(QDialog):
+class AddCombo(QDialog, scaling_dpi):
     def __init__(self):
         """mainWindow"""
         super().__init__()

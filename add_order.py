@@ -32,7 +32,7 @@ month = datetime.month()
 day = datetime.day()
 
 
-class Addorders(QDialog):
+class Addorders(QDialog, scaling_dpi):
     """add new record class"""
 
     def __init__(self):

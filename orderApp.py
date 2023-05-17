@@ -1282,7 +1282,7 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.destroy()
 
 
-class orderUpdate(QDialog):
+class orderUpdate(QDialog, scaling_dpi):
     """double mouse click table"""
 
     def __init__(self):
