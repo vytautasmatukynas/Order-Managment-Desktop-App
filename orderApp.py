@@ -1,4 +1,3 @@
-import ctypes
 import os
 import sys
 import webbrowser
@@ -13,6 +12,7 @@ from PyQt5 import QtWidgets, QtCore, QtPrintSupport, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from scaling import scaling_dpi
 
 import add_combo
 import add_order
@@ -52,23 +52,7 @@ _AppName_ = 'Order App'
 LINK_TO_VERSION = "link to version file"
 LINK_TO_FILE = "link to setup file"
 
-# get windows scale ratio
-user32 = ctypes.windll.user32
-# SAME AS CHANGING ON python.exe DPI aware Application ---->>> ctypes.windll.shcore.SetProcessDpiAwareness(1)
-user32.SetProcessDPIAware(1)
 
-scale_factor = user32.GetDpiForSystem() / 96.0
-# print("Scale factor:", scale_factor)
-
-# change widget size to scale ratio
-TEXT_PT = int(12 * scale_factor)
-BUTTON_HEIGHT = int(25 * scale_factor)
-ENTRY_COMBO_HEIGHT = int(25 * scale_factor)
-SEARCH_BUTTON_WIDTH = int(90 * scale_factor)
-PROGRESS_WIDTH = int(150 * scale_factor)
-TREE_TABLE_WIDTH = int(150 * scale_factor)
-TB_ICON_WIDTH = int(17 * scale_factor)
-TB_ICON_HEIGHT = int(17 * scale_factor)
 
 
 # align for QTable class, DELEGATE ALIGNMENT
@@ -79,7 +63,7 @@ class AlignDelegate(QtWidgets.QStyledItemDelegate):
         option.displayAlignment = QtCore.Qt.AlignCenter
 
 
-class MainMenu(QMainWindow):
+class MainMenu(QMainWindow, scaling_dpi):
     def __init__(self):
         """mainWindow"""
         super().__init__()
@@ -87,8 +71,8 @@ class MainMenu(QMainWindow):
         # mainWindow
         self.setWindowTitle("Order App")
         self.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        self.setGeometry(int(100 / scale_factor), int(100 / scale_factor),
-                         int(1200 * scale_factor), int(720 * scale_factor))
+        self.setGeometry(int(100 / self.scale_factor), int(100 / self.scale_factor),
+                         int(1200 * self.scale_factor), int(720 * self.scale_factor))
         self.showMaximized()
 
         self.option = True
@@ -349,29 +333,29 @@ class MainMenu(QMainWindow):
 
     def searchWidgets(self):
         self.cancelButton1 = QPushButton("CANCEL")
-        self.cancelButton1.setFixedHeight(BUTTON_HEIGHT)
-        self.cancelButton1.setFixedWidth(SEARCH_BUTTON_WIDTH)
+        self.cancelButton1.setFixedHeight(self.BUTTON_HEIGHT)
+        self.cancelButton1.setFixedWidth(self.SEARCH_BUTTON_WIDTH)
         self.cancelButton1.clicked.connect(self.clearSearchEntry)
         self.cancelButton1.setFont(QFont("Times", 10))
 
         self.searchButton1 = QPushButton("SEARCH")
-        self.searchButton1.setFixedHeight(BUTTON_HEIGHT)
-        self.searchButton1.setFixedWidth(SEARCH_BUTTON_WIDTH)
+        self.searchButton1.setFixedHeight(self.BUTTON_HEIGHT)
+        self.searchButton1.setFixedWidth(self.SEARCH_BUTTON_WIDTH)
         self.searchButton1.clicked.connect(self.searchTables)
         self.searchButton1.setFont(QFont("Times", 10))
 
         self.searchEntry1 = QLineEdit()
-        self.searchEntry1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.searchEntry1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
         self.searchEntry1.setPlaceholderText('Filter table...')
 
         self.cancelButton2 = QPushButton("CANCEL")
-        self.cancelButton2.setFixedHeight(BUTTON_HEIGHT)
-        self.cancelButton2.setFixedWidth(SEARCH_BUTTON_WIDTH)
+        self.cancelButton2.setFixedHeight(self.BUTTON_HEIGHT)
+        self.cancelButton2.setFixedWidth(self.SEARCH_BUTTON_WIDTH)
         self.cancelButton2.clicked.connect(self.clearSearchEntry2)
         self.cancelButton2.setFont(QFont("Times", 10))
 
         self.searchEntry2 = QLineEdit()
-        self.searchEntry2.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.searchEntry2.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
         self.searchEntry2.setPlaceholderText('Select table items...')
         self.searchEntry2.textChanged.connect(self.searchTables2)
 
@@ -382,7 +366,7 @@ class MainMenu(QMainWindow):
         self.treeTable.setAnimated(True)
         self.treeTable.setHeaderHidden(True)
         self.treeTable.setColumnCount(1)
-        self.treeTable.setMaximumWidth(TREE_TABLE_WIDTH)
+        self.treeTable.setMaximumWidth(self.TREE_TABLE_WIDTH)
         self.treeTable.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         # self.treeTable.header().setStretchLastSection(False)
         # self.treeTable.header().setSectionResizeMode(QHeaderView.ResizeToContents)
@@ -421,7 +405,7 @@ class MainMenu(QMainWindow):
         # self.addToolBar(QtCore.Qt.BottomToolBarArea, self.tb2)
         self.setToolButtonStyle(Qt.ToolButtonIconOnly)
         # self.tb2.setMovable(False)
-        self.tb2.setIconSize(QtCore.QSize(TB_ICON_WIDTH, TB_ICON_HEIGHT))
+        self.tb2.setIconSize(QtCore.QSize(self.TB_ICON_WIDTH, self.TB_ICON_HEIGHT))
 
         self.add_tb = QAction(QIcon("icons/add.png"), "../add", self)
         self.tb2.addAction(self.add_tb)
@@ -459,9 +443,9 @@ class MainMenu(QMainWindow):
     def default_widgets(self):
         self.expand_button = QPushButton()
         self.expand_button.setIcon(QIcon("icons/to_left.png"))
-        self.expand_button.setIconSize(QSize(int(19*scale_factor), int(19*scale_factor)))
+        self.expand_button.setIconSize(QSize(int(19*self.scale_factor), int(19*self.scale_factor)))
         self.expand_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.expand_button.setFixedWidth(int(20*scale_factor))
+        self.expand_button.setFixedWidth(int(20*self.scale_factor))
         self.expand_button.clicked.connect(self.treeTableHideShow)
 
     def showTime(self):
@@ -824,6 +808,7 @@ class MainMenu(QMainWindow):
                     row_number = self.ordersTable.rowCount()
                     self.ordersTable.insertRow(row_number)
                     for column_number, data in enumerate(row_date):
+
                         setitem = QTableWidgetItem(str(data))
 
                         # print(row_number, column_number, data)
@@ -1304,8 +1289,8 @@ class orderUpdate(QDialog):
         super().__init__()
         self.setWindowTitle('UPDATE')
         self.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        self.setGeometry(int(400 / scale_factor), int(300 / scale_factor),
-                         int(1000 * scale_factor), int(431 * scale_factor))
+        self.setGeometry(int(400 / self.scale_factor), int(300 / self.scale_factor),
+                         int(1000 * self.scale_factor), int(431 * self.scale_factor))
         self.setFixedSize(self.size())
 
         # self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -1405,14 +1390,14 @@ class orderUpdate(QDialog):
             list_company)
         self.companyCombo1.setCurrentText(self.uzsakymasCompany)
         self.companyCombo1.setFont(QFont("Times", 12))
-        self.companyCombo1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.companyCombo1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.clientCombo1 = QComboBox()
         self.clientCombo1.setEditable(True)
         self.clientCombo1.addItems(list_client)
         self.clientCombo1.setCurrentText(self.uzsakymasClient)
         self.clientCombo1.setFont(QFont("Times", 12))
-        self.clientCombo1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.clientCombo1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.phoneCombo1 = QComboBox()
         self.phoneCombo1.setEditable(True)
@@ -1420,7 +1405,7 @@ class orderUpdate(QDialog):
         self.phoneCombo1.addItems(list_phone)
         self.phoneCombo1.setCurrentText(self.uzsakymasPhone)
         self.phoneCombo1.setFont(QFont("Times", 12))
-        self.phoneCombo1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.phoneCombo1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.nameCombo1 = QComboBox()
         self.nameCombo1.setEditable(True)
@@ -1428,21 +1413,21 @@ class orderUpdate(QDialog):
         self.nameCombo1.addItems(list_name)
         self.nameCombo1.setCurrentText(self.uzsakymasName)
         self.nameCombo1.setFont(QFont("Times", 12))
-        self.nameCombo1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.nameCombo1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.termEntry1 = QComboBox()
         self.termEntry1.addItems(["-", "+"])
         self.termEntry1.setEditable(True)
         self.termEntry1.setCurrentText(self.uzsakymasTerm)
         self.termEntry1.setFont(QFont("Times", 12))
-        self.termEntry1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.termEntry1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.statusCombo1 = QComboBox()
         self.statusCombo1.addItems(['FINISHED', 'IN PROCESS'])
         self.statusCombo1.setEditable(True)
         self.statusCombo1.setCurrentText(self.uzsakymasStatus)
         self.statusCombo1.setFont(QFont("Times", 12))
-        self.statusCombo1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.statusCombo1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.commentsEntry1 = QTextEdit()
         self.commentsEntry1.setText(self.uzsakymasComments)
@@ -1453,10 +1438,10 @@ class orderUpdate(QDialog):
         self.locEntry.setReadOnly(True)
         self.locEntry.setStyleSheet("QLineEdit{background: darkgrey;}")
         self.locEntry.setFont(QFont("Times", 12))
-        self.locEntry.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.locEntry.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.folderBtn = QPushButton("LINK TO FOLDER")
-        self.folderBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.folderBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.folderBtn.clicked.connect(self.OpenFolderDialog)
         self.folderBtn.setFont(QFont("Times", 10))
 
@@ -1465,26 +1450,26 @@ class orderUpdate(QDialog):
         self.ListEntry1.setReadOnly(True)
         self.ListEntry1.setFont(QFont("Times", 12))
         self.ListEntry1.setStyleSheet("QLineEdit{background: darkgrey;}")
-        self.ListEntry1.setFixedHeight(ENTRY_COMBO_HEIGHT)
+        self.ListEntry1.setFixedHeight(self.ENTRY_COMBO_HEIGHT)
 
         self.fileBtn = QPushButton("CHANGE FILE")
-        self.fileBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.fileBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.fileBtn.clicked.connect(self.getFileInfo)
         self.fileBtn.setFont(QFont("Times", 10))
 
         self.dateBtn = QPushButton("CHANGE DATE")
-        self.dateBtn.setFixedWidth(int(110 * scale_factor))
-        self.dateBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.dateBtn.setFixedWidth(int(110 * self.scale_factor))
+        self.dateBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.dateBtn.clicked.connect(self.terminasCalendar)
         self.dateBtn.setFont(QFont("Times", 10))
 
         self.okBtn = QPushButton("OK")
-        self.okBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.okBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.okBtn.clicked.connect(self.updateorders)
         self.okBtn.setFont(QFont("Times", 10))
 
         self.cancelBtn = QPushButton("CANCEL")
-        self.cancelBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.cancelBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.cancelBtn.clicked.connect(self.cancelorders)
         self.cancelBtn.setFont(QFont("Times", 10))
 
@@ -1553,7 +1538,7 @@ class orderUpdate(QDialog):
         self.cal.setGridVisible(True)
         self.calBtn = QPushButton("CANCEL")
         self.calBtn.setFont(QFont("Times", 10))
-        self.calBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.calBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.calBtn.clicked.connect(self.cal_cancel)
 
         self.calendarWindow = QWidget()
@@ -1561,8 +1546,8 @@ class orderUpdate(QDialog):
         self.hbox.addWidget(self.cal)
         self.hbox.addWidget(self.calBtn)
         self.calendarWindow.setLayout(self.hbox)
-        self.calendarWindow.setGeometry(int(780 / scale_factor), int(280 / scale_factor),
-                                        int(350 * scale_factor), int(350 * scale_factor))
+        self.calendarWindow.setGeometry(int(780 / self.scale_factor), int(280 / self.scale_factor),
+                                        int(350 * self.scale_factor), int(350 * self.scale_factor))
         self.calendarWindow.setWindowTitle('ORDER TERM')
         self.calendarWindow.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
         style_retro.QCalendarstyle(self)
@@ -1704,7 +1689,7 @@ class orderUpdate(QDialog):
 
 
 def main():
-    # os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+    # os.environ["QT_AUTO_SCREEN_self.scale_factor"] = "1"
     App = QApplication(sys.argv)
     # App.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
