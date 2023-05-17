@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import *
 
 import config
 import style_retro
+from scaling import scaling_dpi
 
 params = config.sql_db
 
@@ -30,18 +31,6 @@ year = datetime.year()
 month = datetime.month()
 day = datetime.day()
 
-# get windows scale ratio
-user32 = ctypes.windll.user32
-user32.SetProcessDPIAware()
-
-scale_factor = user32.GetDpiForSystem() / 96.0
-# print("Scale factor:", scale_factor)
-
-# change widget size to scale ratio
-TEXT_PT = int(12 * scale_factor)
-BUTTON_HEIGHT = int(25 * scale_factor)
-ENTRY_COMBO_HEIGHT = int(25 * scale_factor)
-
 
 class Addorders(QDialog):
     """add new record class"""
@@ -52,8 +41,8 @@ class Addorders(QDialog):
 
         self.setWindowTitle("NEW")
         self.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
-        self.setGeometry(int(400 / scale_factor), int(300 / scale_factor),
-                         int(1000 * scale_factor), int(432 * scale_factor))
+        self.setGeometry(int(400 / self.scale_factor), int(300 / self.scale_factor),
+                         int(1000 * self.scale_factor), int(432 * self.scale_factor))
         self.setFixedSize(self.size())
 
         # self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -168,7 +157,7 @@ class Addorders(QDialog):
         self.locEntry.setFont(QFont("Times", 12))
 
         self.folderBtn = QPushButton("ADD LINK TO FOLDER")
-        self.folderBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.folderBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.folderBtn.clicked.connect(self.OpenFolderDialog)
         self.folderBtn.setFont(QFont("Times", 10))
 
@@ -180,24 +169,24 @@ class Addorders(QDialog):
         self.ListEntry.setFont(QFont("Times", 12))
 
         self.fileBtn = QPushButton("ADD FILE")
-        self.fileBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.fileBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.fileBtn.clicked.connect(self.getFileInfo)
         self.fileBtn.setFont(QFont("Times", 10))
 
         self.dateBtn = QPushButton("ADD DATE")
-        self.dateBtn.setFixedWidth(int(110 * scale_factor))
-        self.dateBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.dateBtn.setFixedWidth(int(110 * self.scale_factor))
+        self.dateBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.dateBtn.clicked.connect(self.terminasCalendar)
         self.dateBtn.setFont(QFont("Times", 10))
 
         self.okBtn = QPushButton("OK")
-        self.okBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.okBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.okBtn.clicked.connect(self.addorders)
         self.okBtn.setFont(QFont("Times", 10))
         # self.okBtn.setMaximumWidth(200)
 
         self.cancelBtn = QPushButton("CANCEL")
-        self.cancelBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.cancelBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.cancelBtn.clicked.connect(self.cancelordersAdd)
         self.cancelBtn.setFont(QFont("Times", 10))
         # self.cancelBtn.setMaximumWidth(200)
@@ -301,7 +290,7 @@ class Addorders(QDialog):
         self.cal.setGridVisible(True)
         self.calBtn = QPushButton("CANCEL")
         self.calBtn.setFont(QFont("Times", 10))
-        self.calBtn.setFixedHeight(BUTTON_HEIGHT)
+        self.calBtn.setFixedHeight(self.BUTTON_HEIGHT)
         self.calBtn.clicked.connect(self.cal_cancel)
 
         self.calendarWindow = QDialog()
@@ -309,8 +298,8 @@ class Addorders(QDialog):
         self.hbox.addWidget(self.cal)
         self.hbox.addWidget(self.calBtn)
         self.calendarWindow.setLayout(self.hbox)
-        self.calendarWindow.setGeometry(int(780 / scale_factor), int(280 / scale_factor),
-                                        int(350 * scale_factor), int(350 * scale_factor))
+        self.calendarWindow.setGeometry(int(780 / self.scale_factor), int(280 / self.scale_factor),
+                                        int(350 * self.scale_factor), int(350 * self.scale_factor))
         self.calendarWindow.setWindowTitle('TERMINAS')
         self.calendarWindow.setWindowIcon(QIcon('icons/uzsakymai_icon.ico'))
         style_retro.QCalendarstyle(self)
