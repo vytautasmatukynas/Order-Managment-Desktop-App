@@ -1,6 +1,4 @@
 # Order-Managment-Dektop-App-Demo
-This is my PyQt and PostgreSQL first dekstop app project.
-
 No "threads" or "OThreads", so if SQL server is slow or internet conn is slow then app will freeze for few seconds when loading SQL data.
 
 Simple order managment dekstop app, where you can store your orders.
