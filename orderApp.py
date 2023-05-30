@@ -1,3 +1,4 @@
+import time
 import os
 import sys
 import webbrowser
@@ -7,12 +8,14 @@ from pathlib import Path
 import pandas
 import psycopg2
 import requests
-import xlwt
+import xlsxwriter as xls
 from PyQt5 import QtWidgets, QtCore, QtPrintSupport, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from scaling import scaling_dpi
+from UliPlot.XLSX import auto_adjust_xlsx_column_width
+from xlsxwriter import utility
 
 import add_combo
 import add_order
@@ -53,19 +56,19 @@ LINK_TO_VERSION = "link to version file"
 LINK_TO_FILE = "link to setup file"
 
 
-
-
 # align for QTable class, DELEGATE ALIGNMENT
 class AlignDelegate(QtWidgets.QStyledItemDelegate):
     def initStyleOption(self, option, index):
-        """Delegate style to items"""
+        """Delegate style to items. ALIGNMENT center"""
         super(AlignDelegate, self).initStyleOption(option, index)
         option.displayAlignment = QtCore.Qt.AlignCenter
 
 
 class MainMenu(QMainWindow, scaling_dpi):
+    """main Class"""
+
     def __init__(self):
-        """mainWindow"""
+
         super().__init__()
 
         # mainWindow
@@ -82,7 +85,8 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.UI()
 
     def UI(self):
-        """Function that starts at start"""
+        """Func's that starts when you start App"""
+
         style_retro.SheetStyle(self)
         self.menubar()
         self.searchWidgets()
@@ -95,7 +99,8 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.updateInfoOnStart()
 
     def menubar(self):
-        """Menu bar"""
+        """Main-menu bar"""
+
         self.menuBarMain = self.menuBar()
         self.menuBarMain.isRightToLeft()
 
@@ -182,7 +187,8 @@ class MainMenu(QMainWindow, scaling_dpi):
         help.addAction(Info)
 
     def updateInfoOnStart(self):
-        """version check"""
+        """This func checks App version. It gets info prof version file and if version is higher then current
+        App version ir offers to download new setup with update from link where you store update .exe"""
         try:
             # Version file link
             response = requests.get(
@@ -227,6 +233,9 @@ class MainMenu(QMainWindow, scaling_dpi):
             x = msg.exec_()
 
     def updateInfo(self):
+        """This func checks App version. It gets info prof version file and if version is higher then current
+            App version ir offers to download new setup with update from link where you store update .exe"""
+
         try:
             response = requests.get(
                 f'{LINK_TO_VERSION}')
@@ -277,6 +286,8 @@ class MainMenu(QMainWindow, scaling_dpi):
             x = msg.exec_()
 
     def helpinfo(self):
+        """ABOUT App info."""
+
         # QMessageBox.information(self, "ABOUT", "If you want to find a needle in a haystack,\n"
         #                                        "burn the haystack.")
         msg = QMessageBox()
@@ -292,7 +303,8 @@ class MainMenu(QMainWindow, scaling_dpi):
         x = msg.exec_()
 
     def tableWidgets(self):
-        """Tables"""
+        """Order table. This func creates order table - columns, rows and etc."""
+
         # ORDER TABLE
         self.emptyTable = QTableWidget()
         self.emptyTable.setColumnCount(0)
@@ -332,6 +344,8 @@ class MainMenu(QMainWindow, scaling_dpi):
             self.ordersTable.setItemDelegateForColumn(number, delegate)
 
     def searchWidgets(self):
+        """Search bar widgets and buttons"""
+
         self.cancelButton1 = QPushButton("CANCEL")
         self.cancelButton1.setFixedHeight(self.BUTTON_HEIGHT)
         self.cancelButton1.setFixedWidth(self.SEARCH_BUTTON_WIDTH)
@@ -359,9 +373,9 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.searchEntry2.setPlaceholderText('Select table items...')
         self.searchEntry2.textChanged.connect(self.searchTables2)
 
-
     def treeTableWidget(self):
-        """Treeview table"""
+        """Treeview table widget"""
+
         self.treeTable = QTreeWidget()
         self.treeTable.setAnimated(True)
         self.treeTable.setHeaderHidden(True)
@@ -371,8 +385,9 @@ class MainMenu(QMainWindow, scaling_dpi):
         # self.treeTable.header().setStretchLastSection(False)
         # self.treeTable.header().setSectionResizeMode(QHeaderView.ResizeToContents)
 
-
     def treeTableItems(self):
+        """Fill tree-table widget with elements from sql like order_name"""
+
         con = psycopg2.connect(
             **params
         )
@@ -401,6 +416,7 @@ class MainMenu(QMainWindow, scaling_dpi):
 
     def toolBarInside(self):
         """Toolbar inside table"""
+
         self.tb2 = QtWidgets.QToolBar("Action tb")
         # self.addToolBar(QtCore.Qt.BottomToolBarArea, self.tb2)
         self.setToolButtonStyle(Qt.ToolButtonIconOnly)
@@ -432,29 +448,36 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.saveAs_tb.triggered.connect(self.saveAs)
 
     def timeWidget(self):
-        # Timer
+        """Timer ir left buttom corner"""
+
         self.Timer = QLabel()
         timer = QTimer(self)
         timer.timeout.connect(self.showTime)
         timer.start(1000)  # update every second
-
         self.showTime()
 
-    def default_widgets(self):
-        self.expand_button = QPushButton()
-        self.expand_button.setIcon(QIcon("icons/to_left.png"))
-        self.expand_button.setIconSize(QSize(int(19*self.scale_factor), int(19*self.scale_factor)))
-        self.expand_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.expand_button.setFixedWidth(int(20*self.scale_factor))
-        self.expand_button.clicked.connect(self.treeTableHideShow)
 
     def showTime(self):
+        """Gets current time to timer"""
+
         self.currentTime = QTime.currentTime()
         self.displayTxt = self.currentTime.toString('hh:mm:ss')
         self.Timer.setText(self.displayTxt)
 
+
+    def default_widgets(self):
+        """Button to expand/collapse tree-table"""
+
+        self.expand_button = QPushButton()
+        self.expand_button.setIcon(QIcon("icons/to_left.png"))
+        self.expand_button.setIconSize(QSize(int(19 * self.scale_factor), int(19 * self.scale_factor)))
+        self.expand_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.expand_button.setFixedWidth(int(20 * self.scale_factor))
+        self.expand_button.clicked.connect(self.treeTableHideShow)
+
+
     def layouts(self):
-        """App layouts"""
+        """MainWindow layouts"""
         self.mainLayout = QVBoxLayout()
 
         self.searchLayout = QHBoxLayout()
@@ -516,7 +539,10 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.central_widget.setLayout(self.mainLayout)
         self.setCentralWidget(self.central_widget)
 
+
     def treeTableHideShow(self):
+        """func that expands/collapse tree-table"""
+
         if self.option:
             self.treeTable.hide()
             self.expand_button.setIcon(QIcon("icons/to_right.png"))
@@ -529,7 +555,9 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             self.option = True
 
+
     def order_select(self):
+        """selects order by ID"""
         global ordersId
 
         self.listorders = []
@@ -538,8 +566,10 @@ class MainMenu(QMainWindow, scaling_dpi):
 
         ordersId = self.listorders[0]
 
+
     def contextMenuEvent(self, event):
-        """Right mouse button select"""
+        """Right mouse button select and menu-bar"""
+
         if self.ordersTable.underMouse():
             global ordersId
 
@@ -570,7 +600,10 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             action = contextMenu.exec_(self.mapToGlobal(event.pos()))
 
+
     def display_table(self):
+        """Fills table with data from sql"""
+
         # Get current date
         if datetime.day() <= 9 and datetime.month() <= 9:
             date = ("{0}-0{1}-0{2}".format(year, month, day))
@@ -640,8 +673,10 @@ class MainMenu(QMainWindow, scaling_dpi):
 
         con.close()
 
+
     def listTables(self):
-        """sort"""
+        """Fills and sorts data from sql to table"""
+
         # Get current date
         if datetime.day() <= 9 and datetime.month() <= 9:
             date = ("{0}-0{1}-0{2}".format(year, month, day))
@@ -736,16 +771,25 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
+
     def refresh_tree_pavaros_items(self):
+        """Refresh table func"""
+
         self.treeTable.clear()
         self.treeTableItems()
         self.treeTable.setCurrentItem(self.ordersSelect)
 
+
     def add_combo(self):
+        """Opens add_combo widnow"""
+
         self.edit_combobox = add_combo.AddCombo()
         self.edit_combobox.exec_()
 
+
     def add_orders(self):
+        """Opens add-order widnow"""
+
         try:
             self.neworders = add_order.Addorders()
             # Refresh table after executing QDialog .exec_
@@ -756,8 +800,10 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
+
     def updateorders(self):
-        """select row data and fill entry with current data"""
+        """Opens update_order widnow and select row data and fills entries with current data from that row"""
+
         global ordersId
 
         try:
@@ -770,8 +816,10 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
+
     def searchTables(self):
         """SEARCH FROM SQL TABLE AND REFRESH QTABLE TO VIEW JUST SEARCHED ITEMS"""
+
         # Get current date
         if datetime.day() <= 9 and datetime.month() <= 9:
             date = ("{0}-0{1}-0{2}".format(year, month, day))
@@ -854,8 +902,10 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
+
     def clearSearchEntry(self):
-        """search cancel"""
+        """Search cancel and refresh table"""
+
         self.searchEntry1.clear()
         try:
             if self.treeTable.currentItem() == self.ordersSelect or \
@@ -866,8 +916,10 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
+
     def searchTables2(self, s):
-        """search for items and select matched items"""
+        """Search for items and select matched items"""
+
         try:
             if self.treeTable.currentItem() == self.ordersSelect or \
                     self.treeTable.currentItem() == self.ordersSelect.child(0) or \
@@ -889,12 +941,16 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
+
     def clearSearchEntry2(self):
-        """search cancel"""
+        """Clears search entry"""
+
         self.searchEntry2.clear()
 
+
     def deleteItem(self):
-        """deletes item and refresh list"""
+        """Deletes item and refresh list"""
+
         mbox = QMessageBox()
         mbox.setWindowTitle("DELETE")
         mbox.setText("DELETE?")
@@ -946,7 +1002,9 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
+
     def save(self):
+        """Save table as .csv file to './save' dir"""
         try:
             self.table_name = ""
 
@@ -988,135 +1046,180 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
+
     def saveAs(self):
-        """save table to .xls .csv"""
+        """Save table as .xlsx or .csv file to selected dir"""
         try:
-            model = ""
+            # model = ""
+            headers = ""
+            table = ""
+            table_name = ""
 
             if self.treeTable.currentItem() == self.ordersSelect or \
                     self.treeTable.currentItem() == self.ordersSelect.child(0) or \
                     self.treeTable.currentItem() == self.ordersSelect.child(1):
-                model = self.ordersTable.model()
+                headers = ["COMPANY", "CLIENT", "PHONE NUMBER", "ORDER NAME", "ORDER TERM",
+                           "STATUS", "COMMENTS", "ORDER FILE", "UPDATED"]
+                # model = self.ordersTable.model()
                 table = self.ordersTable
                 self.table_name = "orders"
 
             filename, file_end = QFileDialog.getSaveFileName(self, 'Save', '',
-                                                             ".xls(*.xls);; .csv(*.csv);; .pdf(*.pdf)")
+                                                             "(*.xlsx);; (*.csv)")
+
+            dir_path = os.path.dirname(filename)
+            # print(dir_path)
+            file_name = os.path.basename(filename).split(".")[0]
+            # print(file_name)
 
             if not filename:
                 return
 
-            if file_end == ".xls(*.xls)":
-                wbk = xlwt.Workbook()
-                sheet = wbk.add_sheet("sheet", cell_overwrite_ok=True)
-                style = xlwt.XFStyle()
-                font = xlwt.Font()
-                font.bold = True
-                style.font = font
+            if file_end == "(*.xlsx)":
+                data = []
+                # counts rows
+                for row in range(table.rowCount()):
+                    row_data = []
+                    # counts columns
+                    for col in range(table.columnCount()):
+                        if not table.isColumnHidden(col):
+                            # prints table items, just have to add .text()
+                            item = table.item(row, col)
+                            if item is not None:
+                                row_data.append(item.text())
+                            else:
+                                row_data.append('')
+                    # print(row_data)
+                    data.append(row_data)
 
-                # set borders for the style
-                borders = xlwt.Borders()
-                borders.left = xlwt.Borders.THIN
-                borders.right = xlwt.Borders.THIN
-                borders.top = xlwt.Borders.THIN
-                borders.bottom = xlwt.Borders.THIN
-                style.borders = borders
+                with pandas.ExcelWriter(f"{dir_path}\{file_name}.xlsx",
+                                        engine='xlsxwriter') as writer:
 
-                # iterate over visible columns only
-                visible_cols = [c for c in range(model.columnCount()) if table.isColumnHidden(c) == False]
-                for i, c in enumerate(visible_cols):
-                    header_text = model.headerData(c, QtCore.Qt.Horizontal)
-                    sheet.write(0, i, header_text, style=style)
+                    data_table = pandas.DataFrame(data,
+                                                  columns=headers)
 
-                    col_width = len(str(header_text))  # initialize column width to the length of the header text
-                    for r in range(model.rowCount()):
-                        text = str(model.data(model.index(r, c)))
-                        col_width = max(col_width, len(text))  # update column width based on the length of the text
-                        sheet.write(r + 1, i, text)  # write cell data to the Excel sheet
+                    data_table.index = range(1, len(data) + 1)
 
-                    # if the column width is less than the header width, set the column width to the header width
-                    if sheet.col(i).width < 256 * (col_width + 1):
-                        sheet.col(i).width = 256 * (col_width + 1)
+                    # Save to .xlsx
+                    data_table.style.set_properties(**{'text-align': 'center'}). \
+                        to_excel(writer,
+                                 sheet_name=f'{table_name}', index=True,
+                                 index_label="Nr.")
 
-                wbk.save(filename)
+                    # # fit to cell
+                    auto_adjust_xlsx_column_width(data_table, writer,
+                                                  sheet_name=f'{table_name}',
+                                                  margin=3)
+
+                    # create workbook
+                    workbook = writer.book
+                    worksheet = writer.sheets[f'{table_name}']
+
+                    # add border on cells
+                    border_format = workbook.add_format({'border': True,
+                                                         'align': 'center',
+                                                         'valign': 'vcenter'})
+
+                    # add style to headers
+                    header_format = workbook.add_format({'font_name': 'Arial',
+                                                         'font_size': 10,
+                                                         'bold': True,
+                                                         'bg_color': 'yellow'})
+
+                    # "xl_range(0, 0, len(data_tables), len(data_tables.columns)"
+                    # first int "0" and second "0" is start point first cell,
+                    # third int is how much rows your need to apply
+                    # and last one is for how many columns to apply
+                    worksheet.conditional_format(xls.utility.xl_range(
+                        0, 0, len(data_table), len(data_table.columns)),
+                        {'type': 'no_errors',
+                         'format': border_format})
+
+                    worksheet.conditional_format(xls.utility.xl_range(
+                        0, 0, 0, len(data_table.columns)),
+                        {'type': 'no_errors',
+                         'format': header_format})
 
             elif file_end == ".csv(*.csv)":
-                conn = psycopg2.connect(
-                    **params
-                )
+                data = []
+                # counts rows
+                for row in range(table.rowCount()):
+                    row_data = []
+                    # counts columns
+                    for col in range(table.columnCount()):
+                        if not table.isColumnHidden(col):
+                            # prints table items, just have to add .text()
+                            item = table.item(row, col)
+                            if item is not None:
+                                row_data.append(item.text())
+                            else:
+                                row_data.append('')
+                    # print(row_data)
+                    data.append(row_data)
+                data_table = pandas.DataFrame(data,
+                                              columns=headers)
 
-                cur = conn.cursor()
+                data_table.to_csv(f"{dir_path}/{file_name}", index=False)
 
-                cur.execute("""SELECT * FROM {}""".format(self.table_name))
-
-                query = cur.fetchall()
-
-                data = pandas.DataFrame(query)
-
-                # Get the directory path from the selected file path
-                directory_path = os.path.dirname(filename)
-
-                # Set the file name to the name entered in the QFileDialog with csv extension
-                file_name = os.path.join(directory_path, os.path.basename(filename))
-
-                data.to_csv(file_name)
-
-                conn.close()
-
-            elif file_end == ".pdf(*.pdf)":
-                printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.PrinterResolution)
-                printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
-                printer.setPaperSize(QtPrintSupport.QPrinter.A4)
-                printer.setOrientation(QtPrintSupport.QPrinter.Landscape)
-                printer.setOutputFileName(filename)
-
-                doc = QtGui.QTextDocument()
-
-                html = """<html>
-                <head>
-                <style>
-                table, th, td {
-                  border: 1px solid black;
-                  border-collapse: collapse;
-                }
-                </style>
-                </head>"""
-                html += "<table><thead>"
-                html += "<tr>"
-                for c in range(model.columnCount()):
-                    if not table.isColumnHidden(c):
-                        html += "<th>{}</th>".format(model.headerData(c, QtCore.Qt.Horizontal))
-
-                html += "</tr></thead>"
-                html += "<tbody>"
-                for r in range(model.rowCount()):
-                    html += "<tr>"
-                    for c in range(model.columnCount()):
-                        if not table.isColumnHidden(c):
-                            html += "<td>{}</td>".format(model.index(r, c).data() or "")
-                    html += "</tr>"
-                html += "</tbody></table>"
-                doc.setHtml(html)
-                doc.setPageSize(QtCore.QSizeF(printer.pageRect().size()))
-                doc.print_(printer)
+            # elif file_end == ".pdf(*.pdf)":
+            #     printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.PrinterResolution)
+            #     printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+            #     printer.setPaperSize(QtPrintSupport.QPrinter.A4)
+            #     printer.setOrientation(QtPrintSupport.QPrinter.Landscape)
+            #     printer.setOutputFileName(filename)
+            #
+            #     doc = QtGui.QTextDocument()
+            #
+            #     html = """<html>
+            #     <head>
+            #     <style>
+            #     table, th, td {
+            #       border: 1px solid black;
+            #       border-collapse: collapse;
+            #     }
+            #     </style>
+            #     </head>"""
+            #     html += "<table><thead>"
+            #     html += "<tr>"
+            #     for c in range(model.columnCount()):
+            #         if not table.isColumnHidden(c):
+            #             html += "<th>{}</th>".format(model.headerData(c, QtCore.Qt.Horizontal))
+            #
+            #     html += "</tr></thead>"
+            #     html += "<tbody>"
+            #     for r in range(model.rowCount()):
+            #         html += "<tr>"
+            #         for c in range(model.columnCount()):
+            #             if not table.isColumnHidden(c):
+            #                 html += "<td>{}</td>".format(model.index(r, c).data() or "")
+            #         html += "</tr>"
+            #     html += "</tbody></table>"
+            #     doc.setHtml(html)
+            #     doc.setPageSize(QtCore.QSizeF(printer.pageRect().size()))
+            #     doc.print_(printer)
 
         except:
             pass
 
+
     def handlePrint(self):
-        """send info to print and prints"""
+        """Sends info to print and prints"""
+
         dialog = QtPrintSupport.QPrintDialog()
         if dialog.exec_() == QtWidgets.QDialog.Accepted:
             self.handlePaintRequest(dialog.printer())
 
+
     def handlePreview(self):
-        """print preview"""
+        """Print preview"""
+
         dialog = QtPrintSupport.QPrintPreviewDialog()
         dialog.paintRequested.connect(self.handlePaintRequest)
         dialog.exec_()
 
+
     def handlePaintRequest(self, printer):
-        """paint print table"""
+        """Paint print table"""
 
         tableFormat = QtGui.QTextTableFormat()
         tableFormat.setBorder(0.5)
@@ -1166,8 +1269,10 @@ class MainMenu(QMainWindow, scaling_dpi):
         frame_format.setBorderBrush(QtGui.QBrush(QtGui.QColor(0, 0, 0)))
         document.print_(printer)
 
+
     def openFolder(self):
-        """open selected folder"""
+        """Open selected folder"""
+
         try:
             global ordersId
 
@@ -1212,14 +1317,18 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
+
     def ordersWriteToFile(self, data, filename):
-        # Convert binary data to proper format and write it on Hard Disk
+        """Convert binary data to proper format and write it on Hard Disk"""
+
         with open(filename, 'wb') as file:
             file.write(data)
         print("Stored blob data into: ", filename, "\n")
 
+
     def openFile(self):
-        """open selected file"""
+        """Download selected file from sql and open it"""
+
         global ordersId
         try:
             con = psycopg2.connect(
@@ -1277,13 +1386,15 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
+
     def MainClose(self):
-        """exit app"""
+        """Exit app"""
+
         self.destroy()
 
 
 class orderUpdate(QDialog, scaling_dpi):
-    """double mouse click table"""
+    """Double mouse click window, update selected order data"""
 
     def __init__(self):
         super().__init__()
@@ -1309,14 +1420,17 @@ class orderUpdate(QDialog, scaling_dpi):
         self.UI()
         self.show()
 
+
     def closeEvent(self, event):
         self.settings.setValue('window size', self.size())
         self.settings.setValue('window position', self.pos())
+
 
     def UI(self):
         self.ordersDetails()
         self.widgets()
         self.layouts()
+
 
     def ordersDetails(self):
         global ordersId
@@ -1345,6 +1459,7 @@ class orderUpdate(QDialog, scaling_dpi):
         self.filename = orders[12]
         self.photo = orders[13]
         self.filetype = orders[14]
+
 
     def widgets(self):
         conn = psycopg2.connect(
@@ -1480,6 +1595,7 @@ class orderUpdate(QDialog, scaling_dpi):
         self.ListFileName = QLabel()
         self.ListFileType = QLabel()
 
+
     def layouts(self):
         self.mainLayout = QHBoxLayout()
         self.mainLayout1 = QHBoxLayout()
@@ -1529,9 +1645,11 @@ class orderUpdate(QDialog, scaling_dpi):
 
         self.setLayout(self.mainLayout)
 
+
     def OpenFolderDialog(self):
         directory = str(QtWidgets.QFileDialog.getExistingDirectory())
         self.locEntry.setText('{}'.format(directory))
+
 
     def terminasCalendar(self):
         self.cal = QCalendarWidget(self)
@@ -1571,11 +1689,13 @@ class orderUpdate(QDialog, scaling_dpi):
 
         self.cal.clicked.connect(get_date)
 
+
     def cal_cancel(self):
         self.calendarWindow.close()
 
+
     def convertToBinaryDataFile(self, filename):
-        # Convert digital data to binary format
+        """Convert digital data to binary format"""
         try:
             with open(filename, 'rb') as file:
                 blobData = file.read()
@@ -1584,8 +1704,9 @@ class orderUpdate(QDialog, scaling_dpi):
         except:
             pass
 
+
     def getFileInfo(self):
-        dialog = QtWidgets.QFileDialog.getOpenFileName(self, "", "", "(*.pdf;*.txt;*.jpg;*.png)")
+        dialog = QtWidgets.QFileDialog.getOpenFileName(self, "", "", "(*.pdf;*.txt;*.jpg;*.png;*.xls)")
         (directory, fileType) = dialog
 
         getfullfilename = Path(directory).name
@@ -1602,6 +1723,7 @@ class orderUpdate(QDialog, scaling_dpi):
         self.ListFileType.setText('{}'.format(filetype))
 
         self.ListEntry1.setText(f"{justfilename}{filetype}")
+
 
     def updateorders(self):
         global ordersId
@@ -1670,7 +1792,6 @@ class orderUpdate(QDialog, scaling_dpi):
 
                 x = msg.exec_()
 
-
         else:
             msg = QMessageBox()
             msg.setWindowTitle("ERROR...")
@@ -1684,6 +1805,7 @@ class orderUpdate(QDialog, scaling_dpi):
 
         self.close()
 
+
     def cancelorders(self):
         self.close()
 
@@ -1691,10 +1813,7 @@ class orderUpdate(QDialog, scaling_dpi):
 def main():
     # os.environ["QT_AUTO_SCREEN_self.scale_factor"] = "1"
     App = QApplication(sys.argv)
-    # App.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-
     window = MainMenu()
-
     sys.exit(App.exec_())
 
 
