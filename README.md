@@ -28,7 +28,7 @@ There is search - first search line sorts items and only shows what you are sear
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/235491424-6ffe9645-9e45-4c2e-9eec-958af608f07e.png)
 
-Export your table to .pdf .xls .csv:
+Export your table to .xlsx .csv:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/235491253-aee3316f-1392-4cb0-8af1-ecdfa4850023.png)
 
