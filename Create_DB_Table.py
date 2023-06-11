@@ -1,5 +1,5 @@
 import psycopg2
-from configparser import ConfigParser
+# from configparser import ConfigParser
 
 import config
 
