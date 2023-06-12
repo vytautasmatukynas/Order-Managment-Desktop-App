@@ -412,7 +412,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         ################
         self.headers.sort()
 
-
         self.ordersSelect_child = self.headers
         for item in self.ordersSelect_child:
             self.ordersSelect.addChild(QTreeWidgetItem([item]))
@@ -461,14 +460,12 @@ class MainMenu(QMainWindow, scaling_dpi):
         timer.start(1000)  # update every second
         self.showTime()
 
-
     def showTime(self):
         """Gets current time to timer"""
 
         self.currentTime = QTime.currentTime()
         self.displayTxt = self.currentTime.toString('hh:mm:ss')
         self.Timer.setText(self.displayTxt)
-
 
     def default_widgets(self):
         """Button to expand/collapse tree-table"""
@@ -479,7 +476,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.expand_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.expand_button.setFixedWidth(int(20 * self.scale_factor))
         self.expand_button.clicked.connect(self.treeTableHideShow)
-
 
     def layouts(self):
         """MainWindow layouts"""
@@ -544,7 +540,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.central_widget.setLayout(self.mainLayout)
         self.setCentralWidget(self.central_widget)
 
-
     def treeTableHideShow(self):
         """func that expands/collapse tree-table"""
 
@@ -560,7 +555,6 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             self.option = True
 
-
     def order_select(self):
         """selects order by ID"""
         global ordersId
@@ -570,7 +564,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.listorders.append(self.ordersTable.item(self.ordersTable.currentRow(), self.num).text())
 
         ordersId = self.listorders[0]
-
 
     def contextMenuEvent(self, event):
         """Right mouse button select and menu-bar"""
@@ -604,7 +597,6 @@ class MainMenu(QMainWindow, scaling_dpi):
             delete.triggered.connect(self.deleteItem)
 
             action = contextMenu.exec_(self.mapToGlobal(event.pos()))
-
 
     def display_table(self):
         """Fills table with data from sql"""
@@ -677,7 +669,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.ordersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         con.close()
-
 
     def listTables(self):
         """Fills and sorts data from sql to table"""
@@ -776,7 +767,6 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
-
     def refresh_tree_pavaros_items(self):
         """Refresh table func"""
 
@@ -784,20 +774,11 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.treeTableItems()
         self.treeTable.setCurrentItem(self.ordersSelect)
 
-    def add_update_thread(self):
-        thread_1 = threading.Thread(target=self.display_table)
-        thread_2 = threading.Thread(target=self.refresh_tree_pavaros_items)
-        thread_1.start()
-        thread_2.start()
-        thread_1.join()
-        thread_2.join()
-
     def add_combo(self):
         """Opens add_combo widnow"""
 
         self.edit_combobox = add_combo.AddCombo()
         self.edit_combobox.exec_()
-
 
     def add_orders(self):
         """Opens add-order widnow"""
@@ -806,11 +787,11 @@ class MainMenu(QMainWindow, scaling_dpi):
             self.neworders = add_order.Addorders()
             # Refresh table after executing QDialog .exec_
             self.neworders.exec_()
-            self.add_update_thread()
+            self.display_table()
+            self.refresh_tree_pavaros_items()
 
         except:
             pass
-
 
     def updateorders(self):
         """Opens update_order widnow and select row data and fills entries with current data from that row"""
@@ -821,11 +802,11 @@ class MainMenu(QMainWindow, scaling_dpi):
             self.display = orderUpdate()
             self.display.show()
             self.display.exec_()
-            self.add_update_thread()
+            self.display_table()
+            self.refresh_tree_pavaros_items()
 
         except:
             pass
-
 
     def searchTables(self):
         """SEARCH FROM SQL TABLE AND REFRESH QTABLE TO VIEW JUST SEARCHED ITEMS"""
@@ -912,7 +893,6 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
-
     def clearSearchEntry(self):
         """Search cancel and refresh table"""
 
@@ -925,7 +905,6 @@ class MainMenu(QMainWindow, scaling_dpi):
 
         except:
             pass
-
 
     def searchTables2(self, s):
         """Search for items and select matched items"""
@@ -951,12 +930,10 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
-
     def clearSearchEntry2(self):
         """Clears search entry"""
 
         self.searchEntry2.clear()
-
 
     def deleteItem(self):
         """Deletes item and refresh list"""
@@ -1012,7 +989,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
-
     def save(self):
         """Save table as .csv file to './save' dir"""
         try:
@@ -1055,7 +1031,6 @@ class MainMenu(QMainWindow, scaling_dpi):
             style_retro.msgsheetstyle(msg)
 
             x = msg.exec_()
-
 
     def saveAs(self):
         """Save table as .xlsx or .csv file to selected dir"""
@@ -1211,7 +1186,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         except:
             pass
 
-
     def handlePrint(self):
         """Sends info to print and prints"""
 
@@ -1219,14 +1193,12 @@ class MainMenu(QMainWindow, scaling_dpi):
         if dialog.exec_() == QtWidgets.QDialog.Accepted:
             self.handlePaintRequest(dialog.printer())
 
-
     def handlePreview(self):
         """Print preview"""
 
         dialog = QtPrintSupport.QPrintPreviewDialog()
         dialog.paintRequested.connect(self.handlePaintRequest)
         dialog.exec_()
-
 
     def handlePaintRequest(self, printer):
         """Paint print table"""
@@ -1279,7 +1251,6 @@ class MainMenu(QMainWindow, scaling_dpi):
         frame_format.setBorderBrush(QtGui.QBrush(QtGui.QColor(0, 0, 0)))
         document.print_(printer)
 
-
     def openFolder(self):
         """Open selected folder"""
 
@@ -1327,14 +1298,12 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
-
     def ordersWriteToFile(self, data, filename):
         """Convert binary data to proper format and write it on Hard Disk"""
 
         with open(filename, 'wb') as file:
             file.write(data)
         print("Stored blob data into: ", filename, "\n")
-
 
     def openFile(self):
         """Download selected file from sql and open it"""
@@ -1396,7 +1365,6 @@ class MainMenu(QMainWindow, scaling_dpi):
 
             x = msg.exec_()
 
-
     def MainClose(self):
         """Exit app"""
 
@@ -1430,17 +1398,14 @@ class orderUpdate(QDialog, scaling_dpi):
         self.UI()
         self.show()
 
-
     def closeEvent(self, event):
         self.settings.setValue('window size', self.size())
         self.settings.setValue('window position', self.pos())
-
 
     def UI(self):
         self.ordersDetails()
         self.widgets()
         self.layouts()
-
 
     def ordersDetails(self):
         global ordersId
@@ -1469,7 +1434,6 @@ class orderUpdate(QDialog, scaling_dpi):
         self.filename = orders[12]
         self.photo = orders[13]
         self.filetype = orders[14]
-
 
     def widgets(self):
         conn = psycopg2.connect(
@@ -1605,7 +1569,6 @@ class orderUpdate(QDialog, scaling_dpi):
         self.ListFileName = QLabel()
         self.ListFileType = QLabel()
 
-
     def layouts(self):
         self.mainLayout = QHBoxLayout()
         self.mainLayout1 = QHBoxLayout()
@@ -1655,11 +1618,9 @@ class orderUpdate(QDialog, scaling_dpi):
 
         self.setLayout(self.mainLayout)
 
-
     def OpenFolderDialog(self):
         directory = str(QtWidgets.QFileDialog.getExistingDirectory())
         self.locEntry.setText('{}'.format(directory))
-
 
     def terminasCalendar(self):
         self.cal = QCalendarWidget(self)
@@ -1699,10 +1660,8 @@ class orderUpdate(QDialog, scaling_dpi):
 
         self.cal.clicked.connect(get_date)
 
-
     def cal_cancel(self):
         self.calendarWindow.close()
-
 
     def convertToBinaryDataFile(self, filename):
         """Convert digital data to binary format"""
@@ -1713,7 +1672,6 @@ class orderUpdate(QDialog, scaling_dpi):
 
         except:
             pass
-
 
     def getFileInfo(self):
         dialog = QtWidgets.QFileDialog.getOpenFileName(self, "", "", "(*.pdf;*.txt;*.jpg;*.png;*.xls)")
@@ -1733,7 +1691,6 @@ class orderUpdate(QDialog, scaling_dpi):
         self.ListFileType.setText('{}'.format(filetype))
 
         self.ListEntry1.setText(f"{justfilename}{filetype}")
-
 
     def updateorders(self):
         global ordersId
@@ -1814,7 +1771,6 @@ class orderUpdate(QDialog, scaling_dpi):
             x = msg.exec_()
 
         self.close()
-
 
     def cancelorders(self):
         self.close()

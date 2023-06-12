@@ -1,5 +1,5 @@
 import psycopg2
-# from configparser import ConfigParser
+from configparser import ConfigParser
 
 import config
 
@@ -35,7 +35,7 @@ cur.execute(("""CREATE TABLE IF NOT EXISTS orders (
             order_file TEXT,
             update_date TEXT,
             filename TEXT,
-            photo BYTEA NOT NULL,
+            photo BYTEA,
             filetype TEXT,
             filedir TEXT
             )
