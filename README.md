@@ -1,5 +1,5 @@
 # Order-Managment-Dektop-App-Demo
-Scaling is abit fkd up. "scaling" class fixes some scaling problems, but... just some. And maybe some threads are needed for adding new, updating and etc. that app won't freeze till SQL is loaded.
+Scaling is abit fkd up. "scaling" class fixes some scaling problems, but... just some.
 
 Simple order managment dekstop app, where you can store your orders.
 App shows when orders are late, you can attach order files .xlm .pdf .jpg .png, add link to order docs folder, new/update/delete/open functions, print table, search table, check for updates and info (request link and compare version number in link to '__version__' in .py, if version is higher than app version, then download new app setup from googledrive link). There is 'create_db_table.py' that creates postgreSQL table for this app. 'style_retro.py' contains all style applied to this app.
