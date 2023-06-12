@@ -3,6 +3,7 @@ import os
 import sys
 import webbrowser
 from pathlib import Path
+import threading
 
 # from configparser import ConfigParser
 import pandas
@@ -404,9 +405,13 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.ordersSelect.setExpanded(True)
 
         self.get_headers = [i[0] for i in query]
+        # clean headers
         self.clean_get_header = set(self.get_headers)
-        self.headers = list(self.clean_get_header)
+        self.headers_clean = list(self.clean_get_header)
+        self.headers = [head for head in self.headers_clean if head != "" and head != None]
+        ################
         self.headers.sort()
+
 
         self.ordersSelect_child = self.headers
         for item in self.ordersSelect_child:
@@ -738,7 +743,7 @@ class MainMenu(QMainWindow, scaling_dpi):
                                         listdata.pop()
                                 for i in listdata:
                                     if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
-                                        None
+                                        pass
                                     elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
                                             or int(i[0:4]) < int(date[0:4]):
                                         setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
@@ -779,6 +784,13 @@ class MainMenu(QMainWindow, scaling_dpi):
         self.treeTableItems()
         self.treeTable.setCurrentItem(self.ordersSelect)
 
+    def add_update_thread(self):
+        thread_1 = threading.Thread(target=self.display_table)
+        thread_2 = threading.Thread(target=self.refresh_tree_pavaros_items)
+        thread_1.start()
+        thread_2.start()
+        thread_1.join()
+        thread_2.join()
 
     def add_combo(self):
         """Opens add_combo widnow"""
@@ -794,8 +806,7 @@ class MainMenu(QMainWindow, scaling_dpi):
             self.neworders = add_order.Addorders()
             # Refresh table after executing QDialog .exec_
             self.neworders.exec_()
-            self.display_table()
-            self.refresh_tree_pavaros_items()
+            self.add_update_thread()
 
         except:
             pass
@@ -810,8 +821,7 @@ class MainMenu(QMainWindow, scaling_dpi):
             self.display = orderUpdate()
             self.display.show()
             self.display.exec_()
-            self.display_table()
-            self.refresh_tree_pavaros_items()
+            self.add_update_thread()
 
         except:
             pass
