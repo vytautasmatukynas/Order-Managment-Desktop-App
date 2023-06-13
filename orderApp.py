@@ -638,8 +638,6 @@ class MainMenu(QMainWindow, scaling_dpi):
             for column_number, data in enumerate(row_date):
                 setitem = QTableWidgetItem(str(data))
 
-                # print(row_number, column_number, data)
-
                 # check current date and table entry, if nor equal or bigger make it red
                 listdata = []
                 if column_number == 5:
@@ -648,7 +646,7 @@ class MainMenu(QMainWindow, scaling_dpi):
                         listdata.pop()
                 for i in listdata:
                     if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
-                        None
+                        setitem.setBackground(QtGui.QColor(255, 255, 255))
                     elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
                             or int(i[0:4]) < int(date[0:4]):
                         setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
@@ -689,20 +687,7 @@ class MainMenu(QMainWindow, scaling_dpi):
                 self.display_table()
 
             else:
-                con = psycopg2.connect(
-                    **params
-                )
-
-                cur = con.cursor()
-
-                cur.execute(
-                    """SELECT order_name FROM orders""")
-                query = cur.fetchall()
-
-                self.get_headers = [i[0] for i in query]
-                self.clean_get_header = set(self.get_headers)
-                self.headers = list(self.clean_get_header)
-                self.headers.sort()
+                con = psycopg2.connect(**params)
 
                 for index_number in range(0, len(self.headers)):
                     if self.treeTable.currentItem() == self.ordersSelect.child(index_number):
@@ -860,7 +845,7 @@ class MainMenu(QMainWindow, scaling_dpi):
                                 listdata.pop()
                         for i in listdata:
                             if int(i[5:7]) > int(date[5:7]) or int(i[0:4]) > int(date[0:4]):
-                                None
+                                setitem.setBackground(QtGui.QColor(255, 255, 255))
                             elif int(i[8:10]) < int(date[8:10]) or int(i[5:7]) < int(date[5:7]) \
                                     or int(i[0:4]) < int(date[0:4]):
                                 setitem.setBackground(QtGui.QColor(255, 0, 0, 110))
@@ -1053,9 +1038,9 @@ class MainMenu(QMainWindow, scaling_dpi):
                                                              "(*.xlsx);; (*.csv)")
 
             dir_path = os.path.dirname(filename)
-            # print(dir_path)
+
             file_name = os.path.basename(filename).split(".")[0]
-            # print(file_name)
+
 
             if not filename:
                 return
@@ -1074,7 +1059,7 @@ class MainMenu(QMainWindow, scaling_dpi):
                                 row_data.append(item.text())
                             else:
                                 row_data.append('')
-                    # print(row_data)
+
                     data.append(row_data)
 
                 with pandas.ExcelWriter(f"{dir_path}\{file_name}.xlsx",
@@ -1139,7 +1124,7 @@ class MainMenu(QMainWindow, scaling_dpi):
                                 row_data.append(item.text())
                             else:
                                 row_data.append('')
-                    # print(row_data)
+
                     data.append(row_data)
                 data_table = pandas.DataFrame(data,
                                               columns=headers)
