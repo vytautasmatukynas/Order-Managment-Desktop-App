@@ -1,5 +1,5 @@
 # Order-Managment-Dektop-App-Demo
-My first desktop app with PyQt, i created this app when i was learning this framework and python.
+My first desktop app with PyQt, i created this app when i was learning this framework.
 This is like demo_version of app that i created and use at work.
 Scaling is abit fkd up. "scaling" class fixes some scaling problems, but... just some.
 
