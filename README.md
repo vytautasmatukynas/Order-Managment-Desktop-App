@@ -27,7 +27,7 @@ There is tree-table to sort items by ORDER_NAME:
 There is search - first search line sorts items and only shows what you are searching, second search line select items in table:
 
 ![paveikslas](https://user-images.githubusercontent.com/51360361/235491350-0749d596-a5f4-4764-97ad-04ea857a7024.png)
-
+-
 ![paveikslas](https://user-images.githubusercontent.com/51360361/235491424-6ffe9645-9e45-4c2e-9eec-958af608f07e.png)
 
 Export your table to .xlsx .csv:
