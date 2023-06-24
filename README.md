@@ -1,6 +1,6 @@
 # Order-Managment-Dektop-App-Demo
 My first desktop app with PyQt, i created this app when i was learning PyQt framework and Python programming language.
-This is like demo_version of app that i created later and i am using that app at work for order management.
+This is like demo_version of app that i created later and i am using that app at work for orders and warehouse items management.
 Scaling is abit fkd up. "scaling" class fixes some scaling problems, but... just some.
 
 Simple order managment dekstop app, where you can store your orders.
